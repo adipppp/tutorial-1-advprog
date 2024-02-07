@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+    private static AtomicLong idCounter = new AtomicLong(1);
 
     @Autowired
     private ProductRepository productRepository;
@@ -27,5 +29,42 @@ public class ProductServiceImpl implements ProductService {
         List<Product> allProduct = new ArrayList<>();
         productIterator.forEachRemaining(allProduct::add);
         return allProduct;
+    }
+
+    @Override
+    public Product findOne(String productId) {
+        if (productId == null)
+            throw new RuntimeException("productId is null");
+
+        Product product;
+        try {
+            product = productRepository.findOne(productId);
+        } catch (RuntimeException exception) {
+            throw new RuntimeException(exception.getMessage(), exception);
+        }
+
+        return product;
+    }
+
+    @Override
+    public Product delete(Product product) {
+        if (product == null)
+            throw new RuntimeException("Product is null");
+
+        String productId = product.getProductId();
+
+        if (productId == null)
+            throw new RuntimeException("Field Product.productId is null");
+        if (productId.length() == 0)
+            throw new RuntimeException("Field Product.productId has 0 length");
+
+        Product productFromRepo;
+        try {
+            productFromRepo = productRepository.delete(product);
+        } catch (RuntimeException exception) {
+            throw new RuntimeException(exception.getMessage(), exception);
+        }
+
+        return productFromRepo;
     }
 }
