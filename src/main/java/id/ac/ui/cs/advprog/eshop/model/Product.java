@@ -8,8 +8,4 @@ public class Product {
     private String productId;
     private String productName;
     private int productQuantity;
-
-    public boolean equals(Product product) {
-        return productId.equals(product.getProductId());
-    }
 }

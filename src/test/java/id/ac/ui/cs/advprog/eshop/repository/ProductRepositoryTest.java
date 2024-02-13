@@ -81,7 +81,11 @@ class ProductRepositoryTest {
     void testFindOneIfEmpty() {
         Exception exception = assertThrows(RuntimeException.class, () ->
             productRepository.findOne("46e4ce01-d7f8-4c50-811f-871ab409a05a"));
-        assertEquals("No such product in repository", exception.getMessage());
+
+        String expectedMessage = "No such product in repository";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -100,5 +104,74 @@ class ProductRepositoryTest {
 
         assertEquals(product1, productRepository.findOne("46e4ce01-d7f8-4c50-811f-871ab409a05a"));
         assertEquals(product2, productRepository.findOne("8418c357-32d1-4c14-8195-086f17ba1399"));
+    }
+
+    @Test
+    void testEdit() {
+        Product product = new Product();
+        product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(2);
+
+        productRepository.create(product);
+
+        Product newProduct = new Product();
+        newProduct.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        newProduct.setProductName("Peci Mas Fuad");
+        newProduct.setProductQuantity(1);
+
+        Product returnedProduct = productRepository.edit(newProduct);
+
+        assertEquals(product.getProductId(), returnedProduct.getProductId());
+        assertEquals(newProduct.getProductName(), returnedProduct.getProductName());
+        assertEquals(newProduct.getProductQuantity(), returnedProduct.getProductQuantity());
+    }
+
+    @Test
+    void testEditIfNoSuchProduct() {
+        Product product = new Product();
+        product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(2);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productRepository.edit(product));
+
+        String expectedMessage = "No such product in repository";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testDelete() {
+        Product product = new Product();
+        product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(2);
+
+        productRepository.create(product);
+
+        Product returnedProduct = productRepository.delete(product);
+
+        assertEquals(product.getProductId(), returnedProduct.getProductId());
+        assertEquals(product.getProductName(), returnedProduct.getProductName());
+        assertEquals(product.getProductQuantity(), returnedProduct.getProductQuantity());
+    }
+
+    @Test
+    void testDeleteIfNoSuchProduct() {
+        Product product = new Product();
+        product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(2);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productRepository.delete(product));
+
+        String expectedMessage = "No such product in repository";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
     }
 }

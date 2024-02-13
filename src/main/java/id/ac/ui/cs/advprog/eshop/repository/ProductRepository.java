@@ -46,7 +46,9 @@ public class ProductRepository {
         Product productFromRepo = null;
         while (productIterator.hasNext()) {
             productFromRepo = productIterator.next();
-            if (productFromRepo.equals(product)) {
+            String productId1 = product.getProductId();
+            String productId2 = productFromRepo.getProductId();
+            if (productId1.equals(productId2)) {
                 productIterator.remove();
                 productIsFound = true;
                 break;
