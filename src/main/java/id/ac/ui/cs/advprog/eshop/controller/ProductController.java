@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
@@ -65,5 +67,88 @@ public class ProductController {
         List<Product> allProducts = service.findAll();
         model.addAttribute("products", allProducts);
         return "productList";
+    }
+
+    @GetMapping({"/edit", "/edit/", "/edit/{productId}", "/edit/{productId}/"})
+    public String editProductPage(Model model, @PathVariable(required=false) String productId) {
+        Product product;
+        try {
+            product = service.findOne(productId);
+        } catch (RuntimeException exception) {
+            exception.printStackTrace();
+            return "redirect:/product/list";
+        }
+        model.addAttribute("product", product);
+        return "editProduct";
+    }
+
+    @PostMapping({"/edit", "/edit/", "/edit/{productId}", "/edit/{productId}/"})
+    public String editProductPost(Model model, @PathVariable(required=false) String productId, @ModelAttribute Product product, BindingResult result) {
+        product.setProductId(productId);
+        try {
+            if (result.hasErrors())
+                throw new RuntimeException("Product quantity is not an integer");
+            service.edit(product);
+        } catch (RuntimeException exception) {
+            exception.printStackTrace();
+
+            String messageToDisplay;
+            String exceptionMessage = exception.getMessage();
+            switch (exceptionMessage) {
+                case "No such product in repository":
+                    messageToDisplay = "Invalid product ID";
+                    break;
+                case "Field Product.productQuantity is less than 0":
+                    messageToDisplay = "Product quantity cannot be negative";
+                    break;
+                case "Product quantity is not an integer":
+                    messageToDisplay = exceptionMessage;
+                    break;
+                case "Field Product.productName has 0 length":
+                    messageToDisplay = "Product name should not be left empty";
+                    break;
+                case "Field Product.productId has 0 length":
+                    messageToDisplay = "Invalid product ID";
+                    break;
+                case "Field Product.productName is null":
+                    messageToDisplay = "Request body is invalid";
+                    break;
+                case "Field Product.productId is null":
+                    return "redirect:/product/list";
+                default:
+                    messageToDisplay = "An unknown exception has occured";
+            }
+
+            model.addAttribute("error", messageToDisplay);
+
+            return "editProduct";
+        }
+
+        return "redirect:/product/list";
+    }
+
+    @GetMapping({"/delete", "/delete/", "/delete/{productId}", "/delete/{productId}"})
+    public String deleteProductPage(Model model, @PathVariable(required=false) String productId) {
+        Product product;
+        try {
+            product = service.findOne(productId);
+        } catch (RuntimeException exception) {
+            exception.printStackTrace();
+            return "redirect:/product/list";
+        }
+        model.addAttribute("product", product);
+        return "deleteProduct";
+    }
+
+    @PostMapping({"/delete", "/delete/", "/delete/{productId}", "/delete/{productId}"})
+    public String deleteProductPost(Model model, @PathVariable(required=false) String productId, @ModelAttribute Product product, BindingResult result) {
+        product.setProductId(productId);
+        try {
+            service.delete(product);
+        } catch (RuntimeException exception) {
+            exception.printStackTrace();
+        }
+
+        return "redirect:/product/list";
     }
 }

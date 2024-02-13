@@ -19,4 +19,57 @@ public class ProductRepository {
     public Iterator<Product> findAll() {
         return productData.iterator();
     }
+    
+    public Product findOne(String productId) {
+        boolean productIsFound = false;
+
+        Iterator<Product> productIterator = findAll();
+        Product product = null;
+        while (productIterator.hasNext()) {
+            product = productIterator.next();
+            if (productId.equals(product.getProductId())) {
+                productIsFound = true;
+                break;
+            }
+        }
+
+        if (!productIsFound)
+            throw new RuntimeException("No such product in repository");
+
+        return product;
+    }
+
+    public Product delete(Product product) {
+        boolean productIsFound = false;
+
+        Iterator<Product> productIterator = findAll();
+        Product productFromRepo = null;
+        while (productIterator.hasNext()) {
+            productFromRepo = productIterator.next();
+            if (productFromRepo.equals(product)) {
+                productIterator.remove();
+                productIsFound = true;
+                break;
+            }
+        }
+
+        if (!productIsFound)
+            throw new RuntimeException("No such product in repository");
+
+        return productFromRepo;
+    }
+
+    public Product edit(Product product) {
+        Product productFromRepo;
+        try {
+            productFromRepo = findOne(product.getProductId());
+        } catch (RuntimeException exception) {
+            throw new RuntimeException(exception.getMessage(), exception);
+        }
+
+        productFromRepo.setProductName(product.getProductName());
+        productFromRepo.setProductQuantity(product.getProductQuantity());
+
+        return productFromRepo;
+    }
 }
