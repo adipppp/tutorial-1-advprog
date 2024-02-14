@@ -10,6 +10,8 @@ Selain itu, ada juga issue yang melarang penulisan string yang sama berulang kal
 
 2. Menurut saya, workflow pada repository ini sudah masuk definisi Continuous Integration dan Continuous Deployment. Pada repository ini, Continuous Integration terletak pada workflow `ci.yml` dan `build.yml`. Kemudian, Continuous Deployment terletak pada deployment ke Koyeb. Saat ada pull request atau push, script yml tersebut akan menjalankan github actions, kemudian Koyeb akan mendeteksi adanya perubahan pada repository dan akan melakukan deployment secara otomatis.
 
+URL koyeb: https://advshop-adipppp.koyeb.app/
+
 ### Reflection 2
 
 
