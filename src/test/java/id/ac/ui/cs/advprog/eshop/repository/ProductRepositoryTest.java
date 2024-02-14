@@ -136,7 +136,7 @@ class ProductRepositoryTest {
 
         Product returnedProduct = productRepository.edit(newProduct);
 
-        assertEquals(product.getProductId(), returnedProduct.getProductId());
+        assertEquals(newProduct.getProductId(), returnedProduct.getProductId());
         assertEquals(newProduct.getProductName(), returnedProduct.getProductName());
         assertEquals(newProduct.getProductQuantity(), returnedProduct.getProductQuantity());
     }

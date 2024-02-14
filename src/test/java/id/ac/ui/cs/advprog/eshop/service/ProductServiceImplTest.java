@@ -44,23 +44,6 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testServiceIfArgsAreNull() {
-        Exception exception = assertThrows(RuntimeException.class,
-            () -> {
-                productService.create(null);
-                productService.edit(null);
-                productService.delete(null);
-            });
-
-        assertEquals("Product is null", exception.getMessage());
-
-        exception = assertThrows(RuntimeException.class,
-            () -> productService.findOne(null));
-
-        assertEquals("productId is null", exception.getMessage());
-    }
-
-    @Test
     void testCreate() {
         Product product = new Product();
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
@@ -73,36 +56,58 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testCreateIfProductNameIsInvalid() {
-        Exception exception = assertThrows(RuntimeException.class,
-            () -> {
-                Product product = new Product();
-                productService.create(product);
-            });
-            
-        assertEquals("Field Product.productName is null", exception.getMessage());
+    void testCreateIfArgumentIsNull() {
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.create(null));
 
-        exception = assertThrows(RuntimeException.class,
-            () -> {
-                Product product = new Product();
-                product.setProductName("");
-                productService.create(product);
-            });
+        String expectedMessage = "Product is null";
+        String actualMessage = exception.getMessage();
 
-        assertEquals("Field Product.productName has 0 length", exception.getMessage());
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    void testCreateIfProductQuantityIsInvalid() {
-        Exception exception = assertThrows(RuntimeException.class,
-            () -> {
-                Product product = new Product();
-                product.setProductName("Sendal Mas Faiz");
-                product.setProductQuantity(-1);
-                productService.create(product);
-            });
+    void testCreateIfProductNameIsNull() {
+        Product product = new Product();
+        product.setProductQuantity(2);
 
-        assertEquals("Field Product.productQuantity is less than 0", exception.getMessage());
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.create(product));
+
+        String expectedMessage = "Field Product.productName is null";
+        String actualMessage = exception.getMessage();
+            
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testCreateIfProductNameHasZeroLength() {
+        Product product = new Product();
+        product.setProductName("");
+        product.setProductQuantity(2);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.create(product));
+
+        String expectedMessage = "Field Product.productName has 0 length";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testCreateIfProductQuantityIsNegative() {
+        Product product = new Product();
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(-1);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.create(product));
+
+        String expectedMessage = "Field Product.productQuantity is less than 0";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -111,6 +116,281 @@ class ProductServiceImplTest {
         Mockito.when(productRepository.findAll()).thenReturn(productIteratorMock);
 
         List<Product> productList = productService.findAll();
+
         assertNotNull(productList);
+    }
+
+    @Test
+    void testFindOne() {
+        Product product1 = new Product();
+        product1.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product1.setProductName("Sendal Mas Faiz");
+        product1.setProductQuantity(2);
+
+        Mockito.when(productRepository.findOne(Mockito.any())).thenReturn(product1);
+
+        Product product2 = new Product();
+        product2.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product2.setProductName("Sendal Mas Faiz");
+        product2.setProductQuantity(2);
+
+        Product returnedValue = null;
+        try {
+            returnedValue = productService.findOne(product2.getProductId());
+        } catch (RuntimeException exception) {}
+
+        assertNotNull(returnedValue);
+        assertEquals(product1.getProductId(), returnedValue.getProductId());
+        assertEquals(product1.getProductName(), returnedValue.getProductName());
+        assertEquals(product1.getProductQuantity(), returnedValue.getProductQuantity());
+    }
+
+    @Test
+    void testFindOneIfArgumentIsNull() {
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.findOne(null));
+
+        String expectedMessage = "productId is null";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testFindOneIfNoSuchProduct() {
+        String expectedMessage = "No such product in repository";
+
+        Mockito.when(productRepository.findOne(Mockito.any()))
+            .thenThrow(new RuntimeException(expectedMessage));
+
+        Product product = new Product();
+        product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(2);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.findOne(product.getProductId()));
+
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testDelete() {
+        Product product1 = new Product();
+        product1.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product1.setProductName("Sendal Mas Faiz");
+        product1.setProductQuantity(2);
+
+        Mockito.when(productRepository.delete(Mockito.any())).thenReturn(product1);
+
+        Product product2 = new Product();
+        product2.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product2.setProductName("Sendal Mas Faiz");
+        product2.setProductQuantity(2);
+
+        Product returnedValue = null;
+        try {
+            returnedValue = productService.delete(product2);
+        } catch (RuntimeException exception) {}
+
+        assertNotNull(returnedValue);
+        assertEquals(product1.getProductId(), returnedValue.getProductId());
+        assertEquals(product1.getProductName(), returnedValue.getProductName());
+        assertEquals(product1.getProductQuantity(), returnedValue.getProductQuantity());
+    }
+
+    @Test
+    void testDeleteIfArgumentIsNull() {
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.delete(null));
+
+        String expectedMessage = "Product is null";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testDeleteIfProductIdIsNull() {
+        Product product = new Product();
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(2);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.delete(product));
+
+        String expectedMessage = "Field Product.productId is null";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testDeleteIfProductIdHasZeroLength() {
+        Product product = new Product();
+        product.setProductId("");
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(2);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.delete(product));
+
+        String expectedMessage = "Field Product.productId has 0 length";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testDeleteIfNoSuchProduct() {
+        String expectedMessage = "No such product in repository";
+
+        Mockito.when(productRepository.delete(Mockito.any()))
+            .thenThrow(new RuntimeException(expectedMessage));
+
+        Product product = new Product();
+        product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(2);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.delete(product));
+
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testEdit() {
+        Product product1 = new Product();
+        product1.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product1.setProductName("Sendal Mas Faiz");
+        product1.setProductQuantity(2);
+
+        Mockito.when(productRepository.edit(Mockito.any())).thenReturn(product1);
+
+        Product product2 = new Product();
+        product2.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product2.setProductName("Sendal Mas Faiz");
+        product2.setProductQuantity(2);
+
+        Product returnedValue = null;
+        try {
+            returnedValue = productService.edit(product2);
+        } catch (RuntimeException exception) {}
+
+        assertNotNull(returnedValue);
+        assertEquals(product1.getProductId(), returnedValue.getProductId());
+        assertEquals(product1.getProductName(), returnedValue.getProductName());
+        assertEquals(product1.getProductQuantity(), returnedValue.getProductQuantity());
+    }
+
+    @Test
+    void testEditIfArgumentIsNull() {
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.edit(null));
+
+        String expectedMessage = "Product is null";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testEditIfProductIdIsNull() {
+        Product product = new Product();
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(2);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.edit(product));
+
+        String expectedMessage = "Field Product.productId is null";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testEditIfProductIdHasZeroLength() {
+        Product product = new Product();
+        product.setProductId("");
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(2);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.edit(product));
+
+        String expectedMessage = "Field Product.productId has 0 length";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testEditIfProductNameIsNull() {
+        Product product = new Product();
+        product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product.setProductQuantity(2);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.edit(product));
+
+        String expectedMessage = "Field Product.productName is null";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testEditIfProductNameHasZeroLength() {
+        Product product = new Product();
+        product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product.setProductName("");
+        product.setProductQuantity(2);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.edit(product));
+
+        String expectedMessage = "Field Product.productName has 0 length";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void testEditIfProductQuantityIsNegative() {
+        Product product = new Product();
+        product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(-1);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.edit(product));
+
+        assertEquals("Field Product.productQuantity is less than 0", exception.getMessage());
+    }
+
+    @Test
+    void testEditIfNoSuchProduct() {
+        String expectedMessage = "An error occured in ProductRepository";
+
+        Mockito.when(productRepository.edit(Mockito.any()))
+            .thenThrow(new RuntimeException(expectedMessage));
+
+        Product product = new Product();
+        product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(2);
+
+        Exception exception = assertThrows(RuntimeException.class, () ->
+            productService.edit(product));
+
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
     }
 }
