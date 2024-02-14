@@ -13,14 +13,19 @@ import java.util.List;
 @Controller
 @RequestMapping("/product")
 public class ProductController {
+    private static final String PRODUCT_ATTR_NAME = "product";
+
+    private ProductService service;
 
     @Autowired
-    private ProductService service;
+    public ProductController(ProductService service) {
+        this.service = service;
+    }
 
     @GetMapping({"/create", "/create/"})
     public String createProductPage(Model model) {
         Product product = new Product();
-        model.addAttribute("product", product);
+        model.addAttribute(PRODUCT_ATTR_NAME, product);
         return "createProduct";
     }
 
@@ -76,7 +81,7 @@ public class ProductController {
             exception.printStackTrace();
             return "redirect:/product/list";
         }
-        model.addAttribute("product", product);
+        model.addAttribute(PRODUCT_ATTR_NAME, product);
         return "editProduct";
     }
 
@@ -134,7 +139,7 @@ public class ProductController {
             exception.printStackTrace();
             return "redirect:/product/list";
         }
-        model.addAttribute("product", product);
+        model.addAttribute(PRODUCT_ATTR_NAME, product);
         return "deleteProduct";
     }
 
