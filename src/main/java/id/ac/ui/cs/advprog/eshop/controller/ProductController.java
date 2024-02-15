@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
+import id.ac.ui.cs.advprog.eshop.exceptions.*;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,12 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
     private static final String PRODUCT_ATTR_NAME = "product";
+    private static final String ERR_ATTR_NAME = "error";
+    private static final String CREATE_PRODUCT = "createProduct";
+    private static final String PRODUCT_LIST = "productList";
+    private static final String REDIRECT_PRODUCT_LIST = "redirect:/product/list";
+    private static final String EDIT_PRODUCT = "editProduct";
+    private static final String DELETE_PRODUCT = "deleteProduct";
 
     private ProductService service;
 
@@ -26,50 +33,57 @@ public class ProductController {
     public String createProductPage(Model model) {
         Product product = new Product();
         model.addAttribute(PRODUCT_ATTR_NAME, product);
-        return "createProduct";
+        return CREATE_PRODUCT;
     }
 
     @PostMapping({"/create", "/create/"})
     public String createProductPost(Model model, @ModelAttribute Product product, BindingResult result) {
         try {
             if (result.hasErrors())
-                throw new RuntimeException("Product quantity is not an integer");
+                throw new IllegalProductQuantityException("Product quantity is not an integer");
+
             service.create(product);
-        } catch (RuntimeException exception) {
+
+        } catch (IllegalProductQuantityException exception) {
+
             exception.printStackTrace();
+            model.addAttribute(ERR_ATTR_NAME, "Product quantity is not an integer");
+            return CREATE_PRODUCT;
 
-            String messageToDisplay;
-            String exceptionMessage = exception.getMessage();
-            switch (exceptionMessage) {
-                case "Field Product.productQuantity is less than 0":
-                    messageToDisplay = "Product quantity cannot be negative";
-                    break;
-                case "Product quantity is not an integer":
-                    messageToDisplay = "Product quantity is not an integer";
-                    break;
-                case "Field Product.productName has 0 length":
-                    messageToDisplay = "Product name should not be left empty";
-                    break;
-                case "Field Product.productName is null":
-                    messageToDisplay = "Request body is invalid";
-                    break;
-                default:
-                    messageToDisplay = "An unknown exception has occured";
-            }
+        } catch (NegativeProductQuantityException exception) {
 
-            model.addAttribute("error", messageToDisplay);
+            exception.printStackTrace();
+            model.addAttribute(ERR_ATTR_NAME, "Product quantity cannot be negative");
+            return CREATE_PRODUCT;
 
-            return "createProduct";
+        } catch (ZeroLengthProductNameException exception) {
+
+            exception.printStackTrace();
+            model.addAttribute(ERR_ATTR_NAME, "Product name should not be left empty");
+            return CREATE_PRODUCT;
+
+        } catch (NullProductNameException exception) {
+
+            exception.printStackTrace();
+            model.addAttribute(ERR_ATTR_NAME, "Request body is invalid");
+            return CREATE_PRODUCT;
+
+        } catch (RuntimeException exception) {
+
+            exception.printStackTrace();
+            model.addAttribute(ERR_ATTR_NAME, "An unknown exception has occured");
+            return CREATE_PRODUCT;
+
         }
 
-        return "redirect:/product/list";
+        return REDIRECT_PRODUCT_LIST;
     }
 
     @GetMapping({"/list", "/list/"})
     public String productListPage(Model model) {
         List<Product> allProducts = service.findAll();
         model.addAttribute("products", allProducts);
-        return "productList";
+        return PRODUCT_LIST;
     }
 
     @GetMapping({"/edit", "/edit/", "/edit/{productId}", "/edit/{productId}/"})
@@ -79,55 +93,73 @@ public class ProductController {
             product = service.findOne(productId);
         } catch (RuntimeException exception) {
             exception.printStackTrace();
-            return "redirect:/product/list";
+            return REDIRECT_PRODUCT_LIST;
         }
+
         model.addAttribute(PRODUCT_ATTR_NAME, product);
-        return "editProduct";
+        return EDIT_PRODUCT;
     }
 
     @PostMapping({"/edit", "/edit/", "/edit/{productId}", "/edit/{productId}/"})
     public String editProductPost(Model model, @PathVariable(required=false) String productId, @ModelAttribute Product product, BindingResult result) {
+
         product.setProductId(productId);
+
         try {
             if (result.hasErrors())
-                throw new RuntimeException("Product quantity is not an integer");
+                throw new IllegalProductQuantityException("Product quantity is not an integer");
+
             service.edit(product);
-        } catch (RuntimeException exception) {
+
+        } catch (IllegalProductQuantityException exception) {
+
+            exception.printStackTrace();
+            model.addAttribute(ERR_ATTR_NAME, "Product quantity is not an integer");
+            return EDIT_PRODUCT;
+
+        } catch (ProductNotFoundException exception) {
+
+            exception.printStackTrace();
+            model.addAttribute(ERR_ATTR_NAME, "Invalid product ID");
+            return EDIT_PRODUCT;
+
+        } catch (NegativeProductQuantityException exception) {
+
+            exception.printStackTrace();
+            model.addAttribute(ERR_ATTR_NAME, "Product quantity cannot be negative");
+            return EDIT_PRODUCT;
+
+        } catch (ZeroLengthProductNameException exception) {
+
+            exception.printStackTrace();
+            model.addAttribute(ERR_ATTR_NAME, "Product name should not be left empty");
+            return EDIT_PRODUCT;
+
+        } catch (ZeroLengthProductIdException exception) {
+
+            exception.printStackTrace();
+            model.addAttribute(ERR_ATTR_NAME, "Invalid product ID");
+            return EDIT_PRODUCT;
+
+        } catch (NullProductNameException exception) {
+
+            exception.printStackTrace();
+            model.addAttribute(ERR_ATTR_NAME, "Request body is invalid");
+            return EDIT_PRODUCT;
+
+        } catch (NullProductIdException exception) {
+
             exception.printStackTrace();
 
-            String messageToDisplay;
-            String exceptionMessage = exception.getMessage();
-            switch (exceptionMessage) {
-                case "No such product in repository":
-                    messageToDisplay = "Invalid product ID";
-                    break;
-                case "Field Product.productQuantity is less than 0":
-                    messageToDisplay = "Product quantity cannot be negative";
-                    break;
-                case "Product quantity is not an integer":
-                    messageToDisplay = exceptionMessage;
-                    break;
-                case "Field Product.productName has 0 length":
-                    messageToDisplay = "Product name should not be left empty";
-                    break;
-                case "Field Product.productId has 0 length":
-                    messageToDisplay = "Invalid product ID";
-                    break;
-                case "Field Product.productName is null":
-                    messageToDisplay = "Request body is invalid";
-                    break;
-                case "Field Product.productId is null":
-                    return "redirect:/product/list";
-                default:
-                    messageToDisplay = "An unknown exception has occured";
-            }
+        } catch (RuntimeException exception) {
 
-            model.addAttribute("error", messageToDisplay);
+            exception.printStackTrace();
+            model.addAttribute(ERR_ATTR_NAME, "An unknown exception has occured");
+            return EDIT_PRODUCT;
 
-            return "editProduct";
         }
 
-        return "redirect:/product/list";
+        return REDIRECT_PRODUCT_LIST;
     }
 
     @GetMapping({"/delete", "/delete/", "/delete/{productId}", "/delete/{productId}"})
@@ -137,21 +169,24 @@ public class ProductController {
             product = service.findOne(productId);
         } catch (RuntimeException exception) {
             exception.printStackTrace();
-            return "redirect:/product/list";
+            return REDIRECT_PRODUCT_LIST;
         }
+
         model.addAttribute(PRODUCT_ATTR_NAME, product);
-        return "deleteProduct";
+        return DELETE_PRODUCT;
     }
 
     @PostMapping({"/delete", "/delete/", "/delete/{productId}", "/delete/{productId}"})
     public String deleteProductPost(Model model, @PathVariable(required=false) String productId, @ModelAttribute Product product, BindingResult result) {
+
         product.setProductId(productId);
+
         try {
             service.delete(product);
         } catch (RuntimeException exception) {
             exception.printStackTrace();
         }
 
-        return "redirect:/product/list";
+        return REDIRECT_PRODUCT_LIST;
     }
 }

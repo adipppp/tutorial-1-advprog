@@ -1,11 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.service;
 
-import id.ac.ui.cs.advprog.eshop.exceptions.NegativeProductQuantityException;
-import id.ac.ui.cs.advprog.eshop.exceptions.NullProductIdException;
-import id.ac.ui.cs.advprog.eshop.exceptions.NullProductNameException;
-import id.ac.ui.cs.advprog.eshop.exceptions.ProductNotFoundException;
-import id.ac.ui.cs.advprog.eshop.exceptions.ZeroLengthProductIdException;
-import id.ac.ui.cs.advprog.eshop.exceptions.ZeroLengthProductNameException;
+import id.ac.ui.cs.advprog.eshop.exceptions.*;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
