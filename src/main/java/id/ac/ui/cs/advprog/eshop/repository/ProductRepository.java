@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.repository;
 
+import id.ac.ui.cs.advprog.eshop.exceptions.ProductNotFoundException;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import org.springframework.stereotype.Repository;
 
@@ -34,7 +35,7 @@ public class ProductRepository {
         }
 
         if (!productIsFound)
-            throw new RuntimeException("No such product in repository");
+            throw new ProductNotFoundException();
 
         return product;
     }
@@ -56,7 +57,7 @@ public class ProductRepository {
         }
 
         if (!productIsFound)
-            throw new RuntimeException("No such product in repository");
+            throw new ProductNotFoundException();
 
         return productFromRepo;
     }
@@ -65,8 +66,8 @@ public class ProductRepository {
         Product productFromRepo;
         try {
             productFromRepo = findOne(product.getProductId());
-        } catch (RuntimeException exception) {
-            throw new RuntimeException(exception.getMessage(), exception);
+        } catch (ProductNotFoundException exception) {
+            throw new ProductNotFoundException(exception);
         }
 
         productFromRepo.setProductName(product.getProductName());
