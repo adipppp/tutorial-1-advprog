@@ -24,12 +24,8 @@ class RootControllerTest {
     }
 
     @AfterEach
-    void cleanUp() {
-        try {
-            closeable.close();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
+    void cleanUp() throws Exception {
+        closeable.close();
     }
 
     @Test

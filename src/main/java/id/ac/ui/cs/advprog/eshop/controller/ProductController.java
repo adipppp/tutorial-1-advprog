@@ -21,6 +21,7 @@ public class ProductController {
     private static final String REDIRECT_PRODUCT_LIST = "redirect:/product/list";
     private static final String EDIT_PRODUCT = "editProduct";
     private static final String DELETE_PRODUCT = "deleteProduct";
+    private static final String NEGATIVE_QUANTITY_EXCEPTION_MSG = "Product quantity is not an integer";
 
     private ProductService service;
 
@@ -40,37 +41,32 @@ public class ProductController {
     public String createProductPost(Model model, @ModelAttribute Product product, BindingResult result) {
         try {
             if (result.hasErrors())
-                throw new IllegalProductQuantityException("Product quantity is not an integer");
+                throw new IllegalProductQuantityException(NEGATIVE_QUANTITY_EXCEPTION_MSG);
 
             service.create(product);
 
         } catch (IllegalProductQuantityException exception) {
 
-            exception.printStackTrace();
-            model.addAttribute(ERR_ATTR_NAME, "Product quantity is not an integer");
+            model.addAttribute(ERR_ATTR_NAME, NEGATIVE_QUANTITY_EXCEPTION_MSG);
             return CREATE_PRODUCT;
 
         } catch (NegativeProductQuantityException exception) {
 
-            exception.printStackTrace();
             model.addAttribute(ERR_ATTR_NAME, "Product quantity cannot be negative");
             return CREATE_PRODUCT;
 
         } catch (ZeroLengthProductNameException exception) {
 
-            exception.printStackTrace();
             model.addAttribute(ERR_ATTR_NAME, "Product name should not be left empty");
             return CREATE_PRODUCT;
 
         } catch (NullProductNameException exception) {
 
-            exception.printStackTrace();
             model.addAttribute(ERR_ATTR_NAME, "Request body is invalid");
             return CREATE_PRODUCT;
 
         } catch (RuntimeException exception) {
 
-            exception.printStackTrace();
             model.addAttribute(ERR_ATTR_NAME, "An unknown exception has occured");
             return CREATE_PRODUCT;
 
@@ -92,7 +88,6 @@ public class ProductController {
         try {
             product = service.findOne(productId);
         } catch (RuntimeException exception) {
-            exception.printStackTrace();
             return REDIRECT_PRODUCT_LIST;
         }
 
@@ -107,53 +102,41 @@ public class ProductController {
 
         try {
             if (result.hasErrors())
-                throw new IllegalProductQuantityException("Product quantity is not an integer");
+                throw new IllegalProductQuantityException(NEGATIVE_QUANTITY_EXCEPTION_MSG);
 
             service.edit(product);
 
-        } catch (IllegalProductQuantityException exception) {
+        } catch (IllegalProductQuantityException | ZeroLengthProductIdException exception) {
 
-            exception.printStackTrace();
-            model.addAttribute(ERR_ATTR_NAME, "Product quantity is not an integer");
+            model.addAttribute(ERR_ATTR_NAME, NEGATIVE_QUANTITY_EXCEPTION_MSG);
             return EDIT_PRODUCT;
 
         } catch (ProductNotFoundException exception) {
 
-            exception.printStackTrace();
             model.addAttribute(ERR_ATTR_NAME, "Invalid product ID");
             return EDIT_PRODUCT;
 
         } catch (NegativeProductQuantityException exception) {
 
-            exception.printStackTrace();
             model.addAttribute(ERR_ATTR_NAME, "Product quantity cannot be negative");
             return EDIT_PRODUCT;
 
         } catch (ZeroLengthProductNameException exception) {
 
-            exception.printStackTrace();
             model.addAttribute(ERR_ATTR_NAME, "Product name should not be left empty");
-            return EDIT_PRODUCT;
-
-        } catch (ZeroLengthProductIdException exception) {
-
-            exception.printStackTrace();
-            model.addAttribute(ERR_ATTR_NAME, "Invalid product ID");
             return EDIT_PRODUCT;
 
         } catch (NullProductNameException exception) {
 
-            exception.printStackTrace();
             model.addAttribute(ERR_ATTR_NAME, "Request body is invalid");
             return EDIT_PRODUCT;
 
         } catch (NullProductIdException exception) {
 
-            exception.printStackTrace();
+            return REDIRECT_PRODUCT_LIST;
 
         } catch (RuntimeException exception) {
 
-            exception.printStackTrace();
             model.addAttribute(ERR_ATTR_NAME, "An unknown exception has occured");
             return EDIT_PRODUCT;
 
@@ -168,7 +151,6 @@ public class ProductController {
         try {
             product = service.findOne(productId);
         } catch (RuntimeException exception) {
-            exception.printStackTrace();
             return REDIRECT_PRODUCT_LIST;
         }
 
@@ -183,9 +165,7 @@ public class ProductController {
 
         try {
             service.delete(product);
-        } catch (RuntimeException exception) {
-            exception.printStackTrace();
-        }
+        } catch (RuntimeException exception) {}
 
         return REDIRECT_PRODUCT_LIST;
     }

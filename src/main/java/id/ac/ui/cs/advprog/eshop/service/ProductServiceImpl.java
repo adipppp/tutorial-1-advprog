@@ -13,6 +13,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+    private static final String NULL_PRODUCT_EXCEPTION_MSG = "product is null";
+
     private static AtomicLong idCounter = new AtomicLong(1);
 
     private ProductRepository productRepository;
@@ -25,7 +27,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product create(Product product) {
         if (product == null)
-            throw new IllegalArgumentException("product is null");
+            throw new IllegalArgumentException(NULL_PRODUCT_EXCEPTION_MSG);
 
         String productName = product.getProductName();
         int productQuantity = product.getProductQuantity();
@@ -71,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product delete(Product product) {
         if (product == null)
-            throw new IllegalArgumentException("product is null");
+            throw new IllegalArgumentException(NULL_PRODUCT_EXCEPTION_MSG);
 
         String productId = product.getProductId();
 
@@ -93,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product edit(Product product) {
         if (product == null)
-            throw new IllegalArgumentException("product is null");
+            throw new IllegalArgumentException(NULL_PRODUCT_EXCEPTION_MSG);
 
         String productId = product.getProductId();
         String productName = product.getProductName();

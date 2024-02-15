@@ -36,12 +36,8 @@ class ProductServiceImplTest {
     }
 
     @AfterEach
-    void cleanUp() {
-        try {
-            closeable.close();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
+    void cleanUp() throws Exception {
+        closeable.close();
     }
 
     @Test
@@ -139,8 +135,11 @@ class ProductServiceImplTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
+        String productId = product.getProductId();
+        assertNotNull(productId);
+
         assertThrows(ProductNotFoundException.class, () ->
-            productService.findOne(product.getProductId()));
+            productService.findOne(productId));
     }
 
     @Test
