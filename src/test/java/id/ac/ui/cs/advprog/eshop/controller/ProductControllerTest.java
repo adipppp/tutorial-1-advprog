@@ -210,4 +210,21 @@ class ProductControllerTest {
 
         assertEquals(expectedViewName, actualViewName);
     }
+
+    @Test
+    void testDeleteProductPostIfDeleteHasErrors() {
+        Model modelMock = Mockito.mock(Model.class);
+        String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Product productMock = Mockito.mock(Product.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(productService.delete(productMock))
+            .thenThrow(new RuntimeException("An error has occured"));
+
+        String expectedViewName = "redirect:/product/list";
+        String actualViewName = productController.deleteProductPost(
+            modelMock, productId, productMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
 }

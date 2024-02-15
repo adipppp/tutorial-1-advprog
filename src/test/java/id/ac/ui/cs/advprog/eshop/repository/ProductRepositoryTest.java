@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.repository;
 
+import id.ac.ui.cs.advprog.eshop.exceptions.*;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -93,13 +94,8 @@ class ProductRepositoryTest {
 
     @Test
     void testFindOneIfEmpty() {
-        Exception exception = assertThrows(RuntimeException.class, () ->
+        assertThrows(ProductNotFoundException.class, () ->
             productRepository.findOne("46e4ce01-d7f8-4c50-811f-871ab409a05a"));
-
-        String expectedMessage = "No such product in repository";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -148,13 +144,7 @@ class ProductRepositoryTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productRepository.edit(product));
-
-        String expectedMessage = "No such product in repository";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(ProductNotFoundException.class, () -> productRepository.edit(product));
     }
 
     @Test
@@ -180,12 +170,6 @@ class ProductRepositoryTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productRepository.delete(product));
-
-        String expectedMessage = "No such product in repository";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(ProductNotFoundException.class, () -> productRepository.delete(product));
     }
 }

@@ -15,8 +15,12 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ProductServiceImpl implements ProductService {
     private static AtomicLong idCounter = new AtomicLong(1);
 
-    @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Override
     public Product create(Product product) {

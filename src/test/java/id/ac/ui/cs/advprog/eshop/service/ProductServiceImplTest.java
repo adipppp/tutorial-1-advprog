@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.service;
 
+import id.ac.ui.cs.advprog.eshop.exceptions.*;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.repository.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -57,13 +58,7 @@ class ProductServiceImplTest {
 
     @Test
     void testCreateIfArgumentIsNull() {
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.create(null));
-
-        String expectedMessage = "Product is null";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(IllegalArgumentException.class, () -> productService.create(null));
     }
 
     @Test
@@ -71,13 +66,7 @@ class ProductServiceImplTest {
         Product product = new Product();
         product.setProductQuantity(2);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.create(product));
-
-        String expectedMessage = "Field Product.productName is null";
-        String actualMessage = exception.getMessage();
-            
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(NullProductNameException.class, () -> productService.create(product));
     }
 
     @Test
@@ -86,13 +75,7 @@ class ProductServiceImplTest {
         product.setProductName("");
         product.setProductQuantity(2);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.create(product));
-
-        String expectedMessage = "Field Product.productName has 0 length";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(ZeroLengthProductNameException.class, () -> productService.create(product));
     }
 
     @Test
@@ -101,13 +84,7 @@ class ProductServiceImplTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(-1);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.create(product));
-
-        String expectedMessage = "Field Product.productQuantity is less than 0";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(NegativeProductQuantityException.class, () -> productService.create(product));
     }
 
     @Test
@@ -147,13 +124,7 @@ class ProductServiceImplTest {
 
     @Test
     void testFindOneIfArgumentIsNull() {
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.findOne(null));
-
-        String expectedMessage = "productId is null";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(IllegalArgumentException.class, () -> productService.findOne(null));
     }
 
     @Test
@@ -161,19 +132,15 @@ class ProductServiceImplTest {
         String expectedMessage = "No such product in repository";
 
         Mockito.when(productRepository.findOne(Mockito.any()))
-            .thenThrow(new RuntimeException(expectedMessage));
+            .thenThrow(new ProductNotFoundException(expectedMessage));
 
         Product product = new Product();
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
+        assertThrows(ProductNotFoundException.class, () ->
             productService.findOne(product.getProductId()));
-
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -203,13 +170,7 @@ class ProductServiceImplTest {
 
     @Test
     void testDeleteIfArgumentIsNull() {
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.delete(null));
-
-        String expectedMessage = "Product is null";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(IllegalArgumentException.class, () -> productService.delete(null));
     }
 
     @Test
@@ -218,13 +179,7 @@ class ProductServiceImplTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.delete(product));
-
-        String expectedMessage = "Field Product.productId is null";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(NullProductIdException.class, () -> productService.delete(product));
     }
 
     @Test
@@ -234,13 +189,7 @@ class ProductServiceImplTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.delete(product));
-
-        String expectedMessage = "Field Product.productId has 0 length";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(ZeroLengthProductIdException.class, () -> productService.delete(product));
     }
 
     @Test
@@ -248,19 +197,14 @@ class ProductServiceImplTest {
         String expectedMessage = "No such product in repository";
 
         Mockito.when(productRepository.delete(Mockito.any()))
-            .thenThrow(new RuntimeException(expectedMessage));
+            .thenThrow(new ProductNotFoundException(expectedMessage));
 
         Product product = new Product();
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.delete(product));
-
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(ProductNotFoundException.class, () -> productService.delete(product));
     }
 
     @Test
@@ -290,13 +234,7 @@ class ProductServiceImplTest {
 
     @Test
     void testEditIfArgumentIsNull() {
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.edit(null));
-
-        String expectedMessage = "Product is null";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(IllegalArgumentException.class, () -> productService.edit(null));
     }
 
     @Test
@@ -305,13 +243,7 @@ class ProductServiceImplTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.edit(product));
-
-        String expectedMessage = "Field Product.productId is null";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(NullProductIdException.class, () -> productService.edit(product));
     }
 
     @Test
@@ -321,13 +253,7 @@ class ProductServiceImplTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.edit(product));
-
-        String expectedMessage = "Field Product.productId has 0 length";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(ZeroLengthProductIdException.class, () -> productService.edit(product));
     }
 
     @Test
@@ -336,13 +262,7 @@ class ProductServiceImplTest {
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product.setProductQuantity(2);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.edit(product));
-
-        String expectedMessage = "Field Product.productName is null";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(NullProductNameException.class, () -> productService.edit(product));
     }
 
     @Test
@@ -352,13 +272,7 @@ class ProductServiceImplTest {
         product.setProductName("");
         product.setProductQuantity(2);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.edit(product));
-
-        String expectedMessage = "Field Product.productName has 0 length";
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(ZeroLengthProductNameException.class, () -> productService.edit(product));
     }
 
     @Test
@@ -368,10 +282,7 @@ class ProductServiceImplTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(-1);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.edit(product));
-
-        assertEquals("Field Product.productQuantity is less than 0", exception.getMessage());
+        assertThrows(NegativeProductQuantityException.class, () -> productService.edit(product));
     }
 
     @Test
@@ -379,18 +290,13 @@ class ProductServiceImplTest {
         String expectedMessage = "An error occured in ProductRepository";
 
         Mockito.when(productRepository.edit(Mockito.any()))
-            .thenThrow(new RuntimeException(expectedMessage));
+            .thenThrow(new ProductNotFoundException(expectedMessage));
 
         Product product = new Product();
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        Exception exception = assertThrows(RuntimeException.class, () ->
-            productService.edit(product));
-
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+        assertThrows(ProductNotFoundException.class, () -> productService.edit(product));
     }
 }
