@@ -19,11 +19,12 @@ java {
 }
 
 sonar {
-  properties {
-    property("sonar.projectKey", "adipppp_tutorial-advprog")
-    property("sonar.organization", "adipppp")
-    property("sonar.host.url", "https://sonarcloud.io")
-  }
+	properties {
+		property("sonar.projectKey", "adipppp_tutorial-advprog")
+		property("sonar.organization", "adipppp")
+		property("sonar.host.url", "https://sonarcloud.io")
+		property("sonar.junit.reportPaths", "build/test-results/test")
+	}
 }
 
 configurations {
@@ -82,5 +83,16 @@ tasks.test {
 }
 
 tasks.jacocoTestReport {
+	reports {
+		xml.required.set(true)
+		html.required.set(true)
+	}
+
 	dependsOn(tasks.test)
+
+	finalizedBy(tasks.sonar)
+}
+
+tasks.sonar {
+	dependsOn(tasks.jacocoTestReport)
 }
