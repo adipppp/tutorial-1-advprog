@@ -16,12 +16,19 @@ import java.util.List;
 public class ProductController {
     private static final String PRODUCT_ATTR_NAME = "product";
     private static final String ERR_ATTR_NAME = "error";
+
     private static final String CREATE_PRODUCT = "CreateProduct";
     private static final String PRODUCT_LIST = "ProductList";
     private static final String REDIRECT_PRODUCT_LIST = "redirect:/product/list";
     private static final String EDIT_PRODUCT = "EditProduct";
     private static final String DELETE_PRODUCT = "DeleteProduct";
-    private static final String NEGATIVE_QUANTITY_EXCEPTION_MSG = "Product quantity is not an integer";
+
+    private static final String ILLEGAL_QUANTITY_EXCEPTION_MSG = "Product quantity is not an integer";
+    private static final String NEGATIVE_QUANTITY_EXCEPTION_MSG = "Product quantity cannot be negative";
+    private static final String ZERO_LENGTH_NAME_EXCEPTION_MSG = "Product name should not be left empty";
+    private static final String NULL_NAME_EXCEPTION_MSG = "Request body is invalid";
+    private static final String INVALID_ID_MSG = "Invalid product ID";
+    private static final String RUNTIME_EXCEPTION_MSG = "An unknown exception has occured";
 
     private ProductService service;
 
@@ -41,33 +48,33 @@ public class ProductController {
     public String createProductPost(Model model, @ModelAttribute Product product, BindingResult result) {
         try {
             if (result.hasErrors())
-                throw new IllegalProductQuantityException(NEGATIVE_QUANTITY_EXCEPTION_MSG);
+                throw new IllegalProductQuantityException(ILLEGAL_QUANTITY_EXCEPTION_MSG);
 
             service.create(product);
 
         } catch (IllegalProductQuantityException exception) {
 
-            model.addAttribute(ERR_ATTR_NAME, NEGATIVE_QUANTITY_EXCEPTION_MSG);
+            model.addAttribute(ERR_ATTR_NAME, ILLEGAL_QUANTITY_EXCEPTION_MSG);
             return CREATE_PRODUCT;
 
         } catch (NegativeProductQuantityException exception) {
 
-            model.addAttribute(ERR_ATTR_NAME, "Product quantity cannot be negative");
+            model.addAttribute(ERR_ATTR_NAME, NEGATIVE_QUANTITY_EXCEPTION_MSG);
             return CREATE_PRODUCT;
 
         } catch (ZeroLengthProductNameException exception) {
 
-            model.addAttribute(ERR_ATTR_NAME, "Product name should not be left empty");
+            model.addAttribute(ERR_ATTR_NAME, ZERO_LENGTH_NAME_EXCEPTION_MSG);
             return CREATE_PRODUCT;
 
         } catch (NullProductNameException exception) {
 
-            model.addAttribute(ERR_ATTR_NAME, "Request body is invalid");
+            model.addAttribute(ERR_ATTR_NAME, NULL_NAME_EXCEPTION_MSG);
             return CREATE_PRODUCT;
 
         } catch (RuntimeException exception) {
 
-            model.addAttribute(ERR_ATTR_NAME, "An unknown exception has occured");
+            model.addAttribute(ERR_ATTR_NAME, RUNTIME_EXCEPTION_MSG);
             return CREATE_PRODUCT;
 
         }
@@ -102,33 +109,33 @@ public class ProductController {
 
         try {
             if (result.hasErrors())
-                throw new IllegalProductQuantityException(NEGATIVE_QUANTITY_EXCEPTION_MSG);
+                throw new IllegalProductQuantityException(ILLEGAL_QUANTITY_EXCEPTION_MSG);
 
             service.edit(product);
 
-        } catch (IllegalProductQuantityException | ZeroLengthProductIdException exception) {
+        } catch (IllegalProductQuantityException exception) {
 
-            model.addAttribute(ERR_ATTR_NAME, NEGATIVE_QUANTITY_EXCEPTION_MSG);
+            model.addAttribute(ERR_ATTR_NAME, ILLEGAL_QUANTITY_EXCEPTION_MSG);
             return EDIT_PRODUCT;
 
-        } catch (ProductNotFoundException exception) {
+        } catch (ProductNotFoundException | ZeroLengthProductIdException exception) {
 
-            model.addAttribute(ERR_ATTR_NAME, "Invalid product ID");
+            model.addAttribute(ERR_ATTR_NAME, INVALID_ID_MSG);
             return EDIT_PRODUCT;
 
         } catch (NegativeProductQuantityException exception) {
 
-            model.addAttribute(ERR_ATTR_NAME, "Product quantity cannot be negative");
+            model.addAttribute(ERR_ATTR_NAME, NEGATIVE_QUANTITY_EXCEPTION_MSG);
             return EDIT_PRODUCT;
 
         } catch (ZeroLengthProductNameException exception) {
 
-            model.addAttribute(ERR_ATTR_NAME, "Product name should not be left empty");
+            model.addAttribute(ERR_ATTR_NAME, ZERO_LENGTH_NAME_EXCEPTION_MSG);
             return EDIT_PRODUCT;
 
         } catch (NullProductNameException exception) {
 
-            model.addAttribute(ERR_ATTR_NAME, "Request body is invalid");
+            model.addAttribute(ERR_ATTR_NAME, NULL_NAME_EXCEPTION_MSG);
             return EDIT_PRODUCT;
 
         } catch (NullProductIdException exception) {
@@ -137,7 +144,7 @@ public class ProductController {
 
         } catch (RuntimeException exception) {
 
-            model.addAttribute(ERR_ATTR_NAME, "An unknown exception has occured");
+            model.addAttribute(ERR_ATTR_NAME, RUNTIME_EXCEPTION_MSG);
             return EDIT_PRODUCT;
 
         }
@@ -165,7 +172,9 @@ public class ProductController {
 
         try {
             service.delete(product);
-        } catch (RuntimeException exception) {}
+        } catch (RuntimeException exception) {
+            return REDIRECT_PRODUCT_LIST;
+        }
 
         return REDIRECT_PRODUCT_LIST;
     }
