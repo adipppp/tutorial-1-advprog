@@ -89,10 +89,4 @@ tasks.jacocoTestReport {
 	}
 
 	dependsOn(tasks.test)
-
-	finalizedBy(tasks.sonar)
-}
-
-tasks.sonar {
-	dependsOn(tasks.jacocoTestReport)
 }

@@ -30,7 +30,7 @@ class RootControllerTest {
 
     @Test
     void testHomePage() {
-        String expectedReturnValue = "homePage";
+        String expectedReturnValue = "HomePage";
         String actualReturnValue = rootController.homePage();
 
         assertEquals(expectedReturnValue, actualReturnValue);

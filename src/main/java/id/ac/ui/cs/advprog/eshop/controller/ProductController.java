@@ -16,11 +16,11 @@ import java.util.List;
 public class ProductController {
     private static final String PRODUCT_ATTR_NAME = "product";
     private static final String ERR_ATTR_NAME = "error";
-    private static final String CREATE_PRODUCT = "createProduct";
-    private static final String PRODUCT_LIST = "productList";
+    private static final String CREATE_PRODUCT = "CreateProduct";
+    private static final String PRODUCT_LIST = "ProductList";
     private static final String REDIRECT_PRODUCT_LIST = "redirect:/product/list";
-    private static final String EDIT_PRODUCT = "editProduct";
-    private static final String DELETE_PRODUCT = "deleteProduct";
+    private static final String EDIT_PRODUCT = "EditProduct";
+    private static final String DELETE_PRODUCT = "DeleteProduct";
     private static final String NEGATIVE_QUANTITY_EXCEPTION_MSG = "Product quantity is not an integer";
 
     private ProductService service;

@@ -18,6 +18,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProductControllerTest {
+    private static final String CREATE_PRODUCT = "CreateProduct";
+    private static final String PRODUCT_LIST = "ProductList";
+    private static final String REDIRECT_PRODUCT_LIST = "redirect:/product/list";
+    private static final String EDIT_PRODUCT = "EditProduct";
+    private static final String DELETE_PRODUCT = "DeleteProduct";
 
     private AutoCloseable closeable;
 
@@ -41,7 +46,7 @@ class ProductControllerTest {
     void testCreateProductPage() {
         Model modelMock = Mockito.mock(Model.class);
 
-        String expectedViewName = "createProduct";
+        String expectedViewName = CREATE_PRODUCT;
         String actualViewName = productController.createProductPage(modelMock);
 
         assertEquals(expectedViewName, actualViewName);
@@ -53,7 +58,7 @@ class ProductControllerTest {
         Product productMock = Mockito.mock(Product.class);
         BindingResult resultMock = Mockito.mock(BindingResult.class);
 
-        String expectedViewName = "redirect:/product/list";
+        String expectedViewName = REDIRECT_PRODUCT_LIST;
         String actualViewName = productController.createProductPost(modelMock, productMock, resultMock);
 
         assertEquals(expectedViewName, actualViewName);
@@ -67,7 +72,7 @@ class ProductControllerTest {
 
         Mockito.when(resultMock.hasErrors()).thenReturn(true);
 
-        String expectedViewName = "createProduct";
+        String expectedViewName = CREATE_PRODUCT;
         String actualViewName = productController.createProductPost(modelMock, productMock, resultMock);
         assertEquals(expectedViewName, actualViewName);
     }
@@ -81,7 +86,7 @@ class ProductControllerTest {
         Mockito.when(productService.create(productMock))
             .thenThrow(new RuntimeException("An error has occured"));
 
-        String expectedViewName = "createProduct";
+        String expectedViewName = CREATE_PRODUCT;
         String actualViewName = productController.createProductPost(modelMock, productMock, resultMock);
         assertEquals(expectedViewName, actualViewName);
     }
@@ -90,7 +95,7 @@ class ProductControllerTest {
     void testProductListPage() {
         Model modelMock = Mockito.mock(Model.class);
 
-        String expectedViewName = "productList";
+        String expectedViewName = PRODUCT_LIST;
         String actualViewName = productController.productListPage(modelMock);
 
         assertEquals(expectedViewName, actualViewName);
@@ -101,7 +106,7 @@ class ProductControllerTest {
         Model modelMock = Mockito.mock(Model.class);
         String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
 
-        String expectedViewName = "editProduct";
+        String expectedViewName = EDIT_PRODUCT;
         String actualViewName = productController.editProductPage(modelMock, productId);
         
         assertEquals(expectedViewName, actualViewName);
@@ -115,7 +120,7 @@ class ProductControllerTest {
         Mockito.when(productService.findOne(productId))
             .thenThrow(new RuntimeException("An error has occured"));
 
-        String expectedViewName = "redirect:/product/list";
+        String expectedViewName = REDIRECT_PRODUCT_LIST;
         String actualViewName = productController.editProductPage(modelMock, productId);
 
         assertEquals(expectedViewName, actualViewName);
@@ -128,7 +133,7 @@ class ProductControllerTest {
         Product productMock = Mockito.mock(Product.class);
         BindingResult resultMock = Mockito.mock(BindingResult.class);
 
-        String expectedViewName = "redirect:/product/list";
+        String expectedViewName = REDIRECT_PRODUCT_LIST;
         String actualViewName = productController.editProductPost(
             modelMock, productId, productMock, resultMock);
 
@@ -144,7 +149,7 @@ class ProductControllerTest {
 
         Mockito.when(resultMock.hasErrors()).thenReturn(true);
 
-        String expectedViewName = "editProduct";
+        String expectedViewName = EDIT_PRODUCT;
         String actualViewName = productController.editProductPost(
             modelMock, productId, productMock, resultMock);
 
@@ -161,7 +166,7 @@ class ProductControllerTest {
         Mockito.when(productService.edit(productMock))
             .thenThrow(new RuntimeException("An error has occured"));
 
-        String expectedViewName = "editProduct";
+        String expectedViewName = EDIT_PRODUCT;
         String actualViewName = productController.editProductPost(
             modelMock, productId, productMock, resultMock);
 
@@ -173,7 +178,7 @@ class ProductControllerTest {
         Model modelMock = Mockito.mock(Model.class);
         String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
 
-        String expectedViewName = "deleteProduct";
+        String expectedViewName = DELETE_PRODUCT;
         String actualViewName = productController.deleteProductPage(modelMock, productId);
         
         assertEquals(expectedViewName, actualViewName);
@@ -187,7 +192,7 @@ class ProductControllerTest {
         Mockito.when(productService.findOne(productId))
             .thenThrow(new RuntimeException("An error has occured"));
 
-        String expectedViewName = "redirect:/product/list";
+        String expectedViewName = REDIRECT_PRODUCT_LIST;
         String actualViewName = productController.deleteProductPage(modelMock, productId);
         
         assertEquals(expectedViewName, actualViewName);
@@ -200,7 +205,7 @@ class ProductControllerTest {
         Product productMock = Mockito.mock(Product.class);
         BindingResult resultMock = Mockito.mock(BindingResult.class);
 
-        String expectedViewName = "redirect:/product/list";
+        String expectedViewName = REDIRECT_PRODUCT_LIST;
         String actualViewName = productController.deleteProductPost(
             modelMock, productId, productMock, resultMock);
 
@@ -217,7 +222,7 @@ class ProductControllerTest {
         Mockito.when(productService.delete(productMock))
             .thenThrow(new RuntimeException("An error has occured"));
 
-        String expectedViewName = "redirect:/product/list";
+        String expectedViewName = REDIRECT_PRODUCT_LIST;
         String actualViewName = productController.deleteProductPost(
             modelMock, productId, productMock, resultMock);
 
