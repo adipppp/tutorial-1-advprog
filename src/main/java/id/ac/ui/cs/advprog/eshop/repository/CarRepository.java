@@ -5,8 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.stereotype.Repository;
+
 import id.ac.ui.cs.advprog.eshop.model.Car;
 
+@Repository
 public class CarRepository {
     static int id = 0;
 
