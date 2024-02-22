@@ -9,13 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
     private static final String NULL_PRODUCT_EXCEPTION_MSG = "product is null";
-
-    private static AtomicLong idCounter = new AtomicLong(1);
 
     private ProductRepository productRepository;
 
@@ -29,18 +27,21 @@ public class ProductServiceImpl implements ProductService {
         if (product == null)
             throw new IllegalArgumentException(NULL_PRODUCT_EXCEPTION_MSG);
 
+        String productId = product.getProductId();
         String productName = product.getProductName();
         int productQuantity = product.getProductQuantity();
 
         if (productName == null)
-            throw new NullProductNameException();
+            throw new NullItemNameException();
         if (productName.length() == 0)
-            throw new ZeroLengthProductNameException();
+            throw new ZeroLengthItemNameException();
         if (productQuantity < 0)
-            throw new NegativeProductQuantityException();
+            throw new NegativeItemQuantityException();
 
-        String productId = Long.toString(idCounter.getAndIncrement());
-        product.setProductId(productId);
+        if (productId == null) {
+            UUID uuid = UUID.randomUUID();
+            product.setProductId(uuid.toString());
+        }
 
         productRepository.create(product);
 
@@ -56,69 +57,65 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product findOne(String productId) {
+    public Product findById(String productId) {
         if (productId == null)
             throw new IllegalArgumentException("productId is null");
 
         Product product;
         try {
-            product = productRepository.findOne(productId);
-        } catch (ProductNotFoundException exception) {
-            throw new ProductNotFoundException(exception);
+            product = productRepository.findById(productId);
+        } catch (ItemNotFoundException exception) {
+            throw new ItemNotFoundException(exception);
         }
 
         return product;
     }
 
     @Override
-    public Product delete(Product product) {
-        if (product == null)
+    public Product deleteById(String productId) {
+        if (productId == null)
             throw new IllegalArgumentException(NULL_PRODUCT_EXCEPTION_MSG);
 
-        String productId = product.getProductId();
-
-        if (productId == null)
-            throw new NullProductIdException();
         if (productId.length() == 0)
-            throw new ZeroLengthProductIdException();
+            throw new ZeroLengthItemIdException();
 
         Product productFromRepo;
         try {
-            productFromRepo = productRepository.delete(product);
-        } catch (ProductNotFoundException exception) {
-            throw new ProductNotFoundException(exception);
+            productFromRepo = productRepository.deleteById(productId);
+        } catch (ItemNotFoundException exception) {
+            throw new ItemNotFoundException(exception);
         }
 
         return productFromRepo;
     }
 
     @Override
-    public Product edit(Product product) {
-        if (product == null)
+    public Product update(Product updatedProduct) {
+        if (updatedProduct == null)
             throw new IllegalArgumentException(NULL_PRODUCT_EXCEPTION_MSG);
 
-        String productId = product.getProductId();
-        String productName = product.getProductName();
-        int productQuantity = product.getProductQuantity();
+        String updatedProductId = updatedProduct.getProductId();
+        String updatedProductName = updatedProduct.getProductName();
+        int updatedProductQuantity = updatedProduct.getProductQuantity();
 
-        if (productId == null)
-            throw new NullProductIdException();
-        if (productName == null)
-            throw new NullProductNameException();
-        if (productId.length() == 0)
-            throw new ZeroLengthProductIdException();
-        if (productName.length() == 0)
-            throw new ZeroLengthProductNameException();
-        if (productQuantity < 0)
-            throw new NegativeProductQuantityException();
+        if (updatedProductId == null)
+            throw new NullItemIdException();
+        if (updatedProductName == null)
+            throw new NullItemNameException();
+        if (updatedProductId.length() == 0)
+            throw new ZeroLengthItemIdException();
+        if (updatedProductName.length() == 0)
+            throw new ZeroLengthItemNameException();
+        if (updatedProductQuantity < 0)
+            throw new NegativeItemQuantityException();
 
-        Product productFromRepo;
+        Product product;
         try {
-            productFromRepo = productRepository.edit(product);
-        } catch (ProductNotFoundException exception) {
-            throw new ProductNotFoundException(exception);
+            product = productRepository.update(updatedProduct);
+        } catch (ItemNotFoundException exception) {
+            throw new ItemNotFoundException(exception);
         }
 
-        return productFromRepo;
+        return product;
     }
 }

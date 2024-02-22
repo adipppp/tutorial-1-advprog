@@ -3,53 +3,66 @@ package id.ac.ui.cs.advprog.eshop.repository;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
+import id.ac.ui.cs.advprog.eshop.exceptions.ItemNotFoundException;
 import id.ac.ui.cs.advprog.eshop.model.Car;
 
 @Repository
-public class CarRepository {
+public class CarRepository implements ItemRepository<Car> {
     static int id = 0;
 
-    private List<Car> carData = new ArrayList<>();
+    private List<Car> carData;
 
+    public CarRepository() {
+        carData = new ArrayList<>();
+    }
+
+    @Override
     public Car create(Car car) {
-        if (car.getCarId() == null) {
-            UUID uuid = UUID.randomUUID();
-            car.setCarId(uuid.toString());
-        }
         carData.add(car);
         return car;
     }
 
+    @Override
     public Iterator<Car> findAll() {
         return carData.iterator();
     }
 
+    @Override
     public Car findById(String id) {
         for (Car car : carData) {
             if (car.getCarId().equals(id))
                 return car;
         }
-        return null;
+        throw new ItemNotFoundException();
     }
 
-    public Car update(String id, Car updatedCar) {
-        for (int i = 0; i < carData.size(); i++) {
-            Car car = carData.get(i);
-            if (car.getCarId().equals(id)) {
+    @Override
+    public Car update(Car updatedCar) {
+        String carId = updatedCar.getCarId();
+        for (Car car : carData) {
+            if (car.getCarId().equals(carId)) {
                 car.setCarName(updatedCar.getCarName());
                 car.setCarColor(updatedCar.getCarColor());
                 car.setCarQuantity(updatedCar.getCarQuantity());
                 return car;
             }
         }
-        return null;
+        throw new ItemNotFoundException();
     }
 
-    public void delete(String id) {
-        carData.removeIf(car -> car.getCarId().equals(id));
+    @Override
+    public Car deleteById(String carId) {
+        Iterator<Car> carIterator = findAll();
+        while (carIterator.hasNext()) {
+            Car car = carIterator.next();
+            if (car.getCarId().equals(carId)) {
+                carIterator.remove();
+                return car;
+            }
+        }
+        throw new ItemNotFoundException();
     }
 }
