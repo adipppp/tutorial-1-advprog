@@ -19,18 +19,39 @@ import id.ac.ui.cs.advprog.eshop.repository.CarRepository;
 
 @Service
 public class CarServiceImpl implements CarService {
-    private static final String NULL_CAR_EXCEPTION_MSG = "updatedCar is null";
     private static final String NULL_CAR_ID_EXCEPTION_MSG = "carId is null";
 
-    @Autowired
     private CarRepository carRepository;
+
+    @Autowired
+    public CarServiceImpl(CarRepository carRepository) {
+        this.carRepository = carRepository;
+    }
 
     @Override
     public Car create(Car car) {
-        if (car.getCarId() == null) {
+        if (car == null)
+            throw new IllegalArgumentException("car is null");
+
+        String carId = car.getCarId();
+        String carName = car.getCarName();
+        int carQuantity = car.getCarQuantity();
+
+        if (carName == null)
+            throw new NullItemNameException();
+        if (carName.isEmpty())
+            throw new ZeroLengthItemNameException();
+        if (carQuantity < 0)
+            throw new NegativeItemQuantityException();
+
+        if (carId == null) {
             UUID uuid = UUID.randomUUID();
-            car.setCarId(uuid.toString());
+            carId = uuid.toString();
+            car.setCarId(carId);
         }
+        if (carId.isEmpty())
+            throw new ZeroLengthItemIdException();
+
         carRepository.create(car);
         return car;
     }
@@ -61,7 +82,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car update(Car updatedCar) {
         if (updatedCar == null)
-            throw new IllegalArgumentException(NULL_CAR_EXCEPTION_MSG);
+            throw new IllegalArgumentException("updatedCar is null");
 
         String updatedCarId = updatedCar.getCarId();
         String updatedCarName = updatedCar.getCarName();
@@ -71,9 +92,9 @@ public class CarServiceImpl implements CarService {
             throw new NullItemIdException();
         if (updatedCarName == null)
             throw new NullItemNameException();
-        if (updatedCarId.length() == 0)
+        if (updatedCarId.isEmpty())
             throw new ZeroLengthItemIdException();
-        if (updatedCarName.length() == 0)
+        if (updatedCarName.isEmpty())
             throw new ZeroLengthItemNameException();
         if (updatedCarQuantity < 0)
             throw new NegativeItemQuantityException();
@@ -92,9 +113,6 @@ public class CarServiceImpl implements CarService {
     public Car deleteById(String carId) {
         if (carId == null)
             throw new IllegalArgumentException(NULL_CAR_ID_EXCEPTION_MSG);
-
-        if (carId.length() == 0)
-            throw new ZeroLengthItemIdException();
 
         Car car;
         try {

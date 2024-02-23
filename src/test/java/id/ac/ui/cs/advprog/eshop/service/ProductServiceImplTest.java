@@ -62,7 +62,7 @@ class ProductServiceImplTest {
         Product product = new Product();
         product.setProductQuantity(2);
 
-        assertThrows(NullProductNameException.class, () -> productService.create(product));
+        assertThrows(NullItemNameException.class, () -> productService.create(product));
     }
 
     @Test
@@ -71,7 +71,7 @@ class ProductServiceImplTest {
         product.setProductName("");
         product.setProductQuantity(2);
 
-        assertThrows(ZeroLengthProductNameException.class, () -> productService.create(product));
+        assertThrows(ZeroLengthItemNameException.class, () -> productService.create(product));
     }
 
     @Test
@@ -80,7 +80,27 @@ class ProductServiceImplTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(-1);
 
-        assertThrows(NegativeProductQuantityException.class, () -> productService.create(product));
+        assertThrows(NegativeItemQuantityException.class, () -> productService.create(product));
+    }
+
+    @Test
+    void testCreateIfProductIdIsNull() {
+        Product product = new Product();
+        product.setProductId(null);
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(2);
+
+        assertDoesNotThrow(() -> productService.create(product));
+    }
+
+    @Test
+    void testCreateIfProductIdHasZeroLength() {
+        Product product = new Product();
+        product.setProductId("");
+        product.setProductName("Sendal Mas Faiz");
+        product.setProductQuantity(2);
+
+        assertThrows(ZeroLengthItemIdException.class, () -> productService.create(product));
     }
 
     @Test
@@ -94,13 +114,13 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testFindOne() {
+    void testFindById() {
         Product product1 = new Product();
         product1.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product1.setProductName("Sendal Mas Faiz");
         product1.setProductQuantity(2);
 
-        Mockito.when(productRepository.findOne(Mockito.any())).thenReturn(product1);
+        Mockito.when(productRepository.findById(Mockito.any())).thenReturn(product1);
 
         Product product2 = new Product();
         product2.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
@@ -109,7 +129,7 @@ class ProductServiceImplTest {
 
         Product returnedValue = null;
         try {
-            returnedValue = productService.findOne(product2.getProductId());
+            returnedValue = productService.findById(product2.getProductId());
         } catch (RuntimeException exception) {}
 
         assertNotNull(returnedValue);
@@ -119,16 +139,16 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testFindOneIfArgumentIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> productService.findOne(null));
+    void testFindByIdIfArgumentIsNull() {
+        assertThrows(IllegalArgumentException.class, () -> productService.findById(null));
     }
 
     @Test
-    void testFindOneIfNoSuchProduct() {
+    void testFindByIdIfNoSuchProduct() {
         String expectedMessage = "No such product in repository";
 
-        Mockito.when(productRepository.findOne(Mockito.any()))
-            .thenThrow(new ProductNotFoundException(expectedMessage));
+        Mockito.when(productRepository.findById(Mockito.any()))
+            .thenThrow(new ItemNotFoundException(expectedMessage));
 
         Product product = new Product();
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
@@ -138,8 +158,8 @@ class ProductServiceImplTest {
         String productId = product.getProductId();
         assertNotNull(productId);
 
-        assertThrows(ProductNotFoundException.class, () ->
-            productService.findOne(productId));
+        assertThrows(ItemNotFoundException.class, () ->
+            productService.findById(productId));
     }
 
     @Test
@@ -149,7 +169,7 @@ class ProductServiceImplTest {
         product1.setProductName("Sendal Mas Faiz");
         product1.setProductQuantity(2);
 
-        Mockito.when(productRepository.delete(Mockito.any())).thenReturn(product1);
+        Mockito.when(productRepository.deleteById(Mockito.any())).thenReturn(product1);
 
         Product product2 = new Product();
         product2.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
@@ -158,7 +178,7 @@ class ProductServiceImplTest {
 
         Product returnedValue = null;
         try {
-            returnedValue = productService.delete(product2);
+            returnedValue = productService.deleteById(product2.getProductId());
         } catch (RuntimeException exception) {}
 
         assertNotNull(returnedValue);
@@ -168,42 +188,24 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testDeleteIfArgumentIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> productService.delete(null));
+    void testDeleteByIdIfArgumentIsNull() {
+        assertThrows(IllegalArgumentException.class, () -> productService.deleteById(null));
     }
 
     @Test
-    void testDeleteIfProductIdIsNull() {
-        Product product = new Product();
-        product.setProductName("Sendal Mas Faiz");
-        product.setProductQuantity(2);
-
-        assertThrows(NullProductIdException.class, () -> productService.delete(product));
-    }
-
-    @Test
-    void testDeleteIfProductIdHasZeroLength() {
-        Product product = new Product();
-        product.setProductId("");
-        product.setProductName("Sendal Mas Faiz");
-        product.setProductQuantity(2);
-
-        assertThrows(ZeroLengthProductIdException.class, () -> productService.delete(product));
-    }
-
-    @Test
-    void testDeleteIfNoSuchProduct() {
+    void testDeleteByIdIfNoSuchProduct() {
         String expectedMessage = "No such product in repository";
 
-        Mockito.when(productRepository.delete(Mockito.any()))
-            .thenThrow(new ProductNotFoundException(expectedMessage));
+        Mockito.when(productRepository.deleteById(Mockito.any()))
+            .thenThrow(new ItemNotFoundException(expectedMessage));
 
         Product product = new Product();
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        assertThrows(ProductNotFoundException.class, () -> productService.delete(product));
+        assertThrows(ItemNotFoundException.class, () ->
+            productService.deleteById(product.getProductId()));
     }
 
     @Test
@@ -213,7 +215,7 @@ class ProductServiceImplTest {
         product1.setProductName("Sendal Mas Faiz");
         product1.setProductQuantity(2);
 
-        Mockito.when(productRepository.edit(Mockito.any())).thenReturn(product1);
+        Mockito.when(productRepository.update(Mockito.any())).thenReturn(product1);
 
         Product product2 = new Product();
         product2.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
@@ -222,7 +224,7 @@ class ProductServiceImplTest {
 
         Product returnedValue = null;
         try {
-            returnedValue = productService.edit(product2);
+            returnedValue = productService.update(product2);
         } catch (RuntimeException exception) {}
 
         assertNotNull(returnedValue);
@@ -233,7 +235,7 @@ class ProductServiceImplTest {
 
     @Test
     void testEditIfArgumentIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> productService.edit(null));
+        assertThrows(IllegalArgumentException.class, () -> productService.update(null));
     }
 
     @Test
@@ -242,7 +244,7 @@ class ProductServiceImplTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        assertThrows(NullProductIdException.class, () -> productService.edit(product));
+        assertThrows(NullItemIdException.class, () -> productService.update(product));
     }
 
     @Test
@@ -252,7 +254,7 @@ class ProductServiceImplTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        assertThrows(ZeroLengthProductIdException.class, () -> productService.edit(product));
+        assertThrows(ZeroLengthItemIdException.class, () -> productService.update(product));
     }
 
     @Test
@@ -261,7 +263,7 @@ class ProductServiceImplTest {
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product.setProductQuantity(2);
 
-        assertThrows(NullProductNameException.class, () -> productService.edit(product));
+        assertThrows(NullItemNameException.class, () -> productService.update(product));
     }
 
     @Test
@@ -271,7 +273,7 @@ class ProductServiceImplTest {
         product.setProductName("");
         product.setProductQuantity(2);
 
-        assertThrows(ZeroLengthProductNameException.class, () -> productService.edit(product));
+        assertThrows(ZeroLengthItemNameException.class, () -> productService.update(product));
     }
 
     @Test
@@ -281,21 +283,21 @@ class ProductServiceImplTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(-1);
 
-        assertThrows(NegativeProductQuantityException.class, () -> productService.edit(product));
+        assertThrows(NegativeItemQuantityException.class, () -> productService.update(product));
     }
 
     @Test
     void testEditIfNoSuchProduct() {
         String expectedMessage = "An error occured in ProductRepository";
 
-        Mockito.when(productRepository.edit(Mockito.any()))
-            .thenThrow(new ProductNotFoundException(expectedMessage));
+        Mockito.when(productRepository.update(Mockito.any()))
+            .thenThrow(new ItemNotFoundException(expectedMessage));
 
         Product product = new Product();
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        assertThrows(ProductNotFoundException.class, () -> productService.edit(product));
+        assertThrows(ItemNotFoundException.class, () -> productService.update(product));
     }
 }

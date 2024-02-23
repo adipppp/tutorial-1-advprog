@@ -52,12 +52,10 @@ public class ProductRepository implements ItemRepository<Product> {
         boolean productIsFound = false;
 
         Iterator<Product> productIterator = findAll();
-        Product productFromRepo = null;
+        Product product = null;
         while (productIterator.hasNext()) {
-            productFromRepo = productIterator.next();
-            String productId1 = productId;
-            String productId2 = productFromRepo.getProductId();
-            if (productId1.equals(productId2)) {
+            product = productIterator.next();
+            if (product.getProductId().equals(productId)) {
                 productIterator.remove();
                 productIsFound = true;
                 break;
@@ -67,7 +65,7 @@ public class ProductRepository implements ItemRepository<Product> {
         if (!productIsFound)
             throw new ItemNotFoundException();
 
-        return productFromRepo;
+        return product;
     }
 
     @Override

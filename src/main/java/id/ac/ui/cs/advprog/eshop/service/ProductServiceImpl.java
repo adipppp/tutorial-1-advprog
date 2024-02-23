@@ -33,15 +33,18 @@ public class ProductServiceImpl implements ProductService {
 
         if (productName == null)
             throw new NullItemNameException();
-        if (productName.length() == 0)
+        if (productName.isEmpty())
             throw new ZeroLengthItemNameException();
         if (productQuantity < 0)
             throw new NegativeItemQuantityException();
 
         if (productId == null) {
             UUID uuid = UUID.randomUUID();
-            product.setProductId(uuid.toString());
+            productId = uuid.toString();
+            product.setProductId(productId);
         }
+        if (productId.isEmpty())
+            throw new ZeroLengthItemIdException();
 
         productRepository.create(product);
 
@@ -76,9 +79,6 @@ public class ProductServiceImpl implements ProductService {
         if (productId == null)
             throw new IllegalArgumentException(NULL_PRODUCT_EXCEPTION_MSG);
 
-        if (productId.length() == 0)
-            throw new ZeroLengthItemIdException();
-
         Product productFromRepo;
         try {
             productFromRepo = productRepository.deleteById(productId);
@@ -102,9 +102,9 @@ public class ProductServiceImpl implements ProductService {
             throw new NullItemIdException();
         if (updatedProductName == null)
             throw new NullItemNameException();
-        if (updatedProductId.length() == 0)
+        if (updatedProductId.isEmpty())
             throw new ZeroLengthItemIdException();
-        if (updatedProductName.length() == 0)
+        if (updatedProductName.isEmpty())
             throw new ZeroLengthItemNameException();
         if (updatedProductQuantity < 0)
             throw new NegativeItemQuantityException();

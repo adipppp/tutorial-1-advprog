@@ -78,24 +78,24 @@ class ProductRepositoryTest {
     }
 
     @Test
-    void testFindOne() {
+    void testFindById() {
         Product product = new Product();
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
         productRepository.create(product);
 
-        assertEquals(product, productRepository.findOne("46e4ce01-d7f8-4c50-811f-871ab409a05a"));
+        assertEquals(product, productRepository.findById("46e4ce01-d7f8-4c50-811f-871ab409a05a"));
     }
 
     @Test
-    void testFindOneIfEmpty() {
-        assertThrows(ProductNotFoundException.class, () ->
-            productRepository.findOne("46e4ce01-d7f8-4c50-811f-871ab409a05a"));
+    void testFindByIdIfEmpty() {
+        assertThrows(ItemNotFoundException.class, () ->
+            productRepository.findById("46e4ce01-d7f8-4c50-811f-871ab409a05a"));
     }
 
     @Test
-    void testFindOneIfMoreThanOneProduct() {
+    void testFindByIdIfMoreThanOneProduct() {
         Product product1 = new Product();
         product1.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product1.setProductName("Sendal Mas Faiz");
@@ -108,12 +108,12 @@ class ProductRepositoryTest {
         product2.setProductQuantity(1);
         productRepository.create(product2);
 
-        assertEquals(product1, productRepository.findOne("46e4ce01-d7f8-4c50-811f-871ab409a05a"));
-        assertEquals(product2, productRepository.findOne("8418c357-32d1-4c14-8195-086f17ba1399"));
+        assertEquals(product1, productRepository.findById("46e4ce01-d7f8-4c50-811f-871ab409a05a"));
+        assertEquals(product2, productRepository.findById("8418c357-32d1-4c14-8195-086f17ba1399"));
     }
 
     @Test
-    void testEdit() {
+    void testUpdate() {
         Product product = new Product();
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product.setProductName("Sendal Mas Faiz");
@@ -126,7 +126,7 @@ class ProductRepositoryTest {
         newProduct.setProductName("Peci Mas Fuad");
         newProduct.setProductQuantity(1);
 
-        Product returnedProduct = productRepository.edit(newProduct);
+        Product returnedProduct = productRepository.update(newProduct);
 
         assertEquals(newProduct.getProductId(), returnedProduct.getProductId());
         assertEquals(newProduct.getProductName(), returnedProduct.getProductName());
@@ -134,13 +134,13 @@ class ProductRepositoryTest {
     }
 
     @Test
-    void testEditIfNoSuchProduct() {
+    void testUpdateIfNoSuchProduct() {
         Product product = new Product();
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        assertThrows(ProductNotFoundException.class, () -> productRepository.edit(product));
+        assertThrows(ItemNotFoundException.class, () -> productRepository.update(product));
     }
 
     @Test
@@ -152,7 +152,7 @@ class ProductRepositoryTest {
 
         productRepository.create(product);
 
-        Product returnedProduct = productRepository.delete(product);
+        Product returnedProduct = productRepository.deleteById("46e4ce01-d7f8-4c50-811f-871ab409a05a");
 
         assertEquals(product.getProductId(), returnedProduct.getProductId());
         assertEquals(product.getProductName(), returnedProduct.getProductName());
@@ -166,6 +166,7 @@ class ProductRepositoryTest {
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
 
-        assertThrows(ProductNotFoundException.class, () -> productRepository.delete(product));
+        assertThrows(ItemNotFoundException.class, () ->
+            productRepository.deleteById("46e4ce01-d7f8-4c50-811f-871ab409a05a"));
     }
 }

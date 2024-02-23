@@ -119,7 +119,7 @@ class ProductControllerTest {
         Model modelMock = Mockito.mock(Model.class);
         String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
 
-        Mockito.when(productService.findOne(productId))
+        Mockito.when(productService.findById(productId))
             .thenThrow(new RuntimeException(RUNTIME_EXCEPTION_MSG));
 
         String expectedViewName = REDIRECT_PRODUCT_LIST;
@@ -165,7 +165,7 @@ class ProductControllerTest {
         Product productMock = Mockito.mock(Product.class);
         BindingResult resultMock = Mockito.mock(BindingResult.class);
 
-        Mockito.when(productService.edit(productMock))
+        Mockito.when(productService.update(productMock))
             .thenThrow(new RuntimeException(RUNTIME_EXCEPTION_MSG));
 
         String expectedViewName = EDIT_PRODUCT;
@@ -191,7 +191,7 @@ class ProductControllerTest {
         Model modelMock = Mockito.mock(Model.class);
         String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
 
-        Mockito.when(productService.findOne(productId))
+        Mockito.when(productService.findById(productId))
             .thenThrow(new RuntimeException(RUNTIME_EXCEPTION_MSG));
 
         String expectedViewName = REDIRECT_PRODUCT_LIST;
@@ -221,7 +221,7 @@ class ProductControllerTest {
         Product productMock = Mockito.mock(Product.class);
         BindingResult resultMock = Mockito.mock(BindingResult.class);
 
-        Mockito.when(productService.delete(productMock))
+        Mockito.when(productService.deleteById(productId))
             .thenThrow(new RuntimeException(RUNTIME_EXCEPTION_MSG));
 
         String expectedViewName = REDIRECT_PRODUCT_LIST;
