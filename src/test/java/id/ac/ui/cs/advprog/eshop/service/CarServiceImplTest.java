@@ -1,6 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.service;
 
 import id.ac.ui.cs.advprog.eshop.exceptions.*;
+import id.ac.ui.cs.advprog.eshop.exceptions.car.*;
 import id.ac.ui.cs.advprog.eshop.model.Car;
 import id.ac.ui.cs.advprog.eshop.repository.CarRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -45,6 +46,7 @@ class CarServiceImplTest {
         Car car = new Car();
         car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car.setCarName("Slamet Kopling");
+        car.setCarColor("Pink");
         car.setCarQuantity(2);
         
         Car returnedCar = carService.create(car);
@@ -60,6 +62,8 @@ class CarServiceImplTest {
     @Test
     void testCreateIfCarNameIsNull() {
         Car car = new Car();
+        car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
+        car.setCarColor("Pink");
         car.setCarQuantity(2);
 
         assertThrows(NullItemNameException.class, () -> carService.create(car));
@@ -68,26 +72,51 @@ class CarServiceImplTest {
     @Test
     void testCreateIfCarNameHasZeroLength() {
         Car car = new Car();
+        car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car.setCarName("");
+        car.setCarColor("Pink");
         car.setCarQuantity(2);
 
         assertThrows(ZeroLengthItemNameException.class, () -> carService.create(car));
     }
 
     @Test
+    void testCreateIfCarColorIsNull() {
+        Car car = new Car();
+        car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
+        car.setCarName("Slamet Kopling");
+        car.setCarQuantity(2);
+
+        assertThrows(NullCarColorException.class, () -> carService.create(car));
+    }
+
+    @Test
+    void testCreateIfCarColorHasZeroLength() {
+        Car car = new Car();
+        car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
+        car.setCarName("Slamet Kopling");
+        car.setCarColor("");
+        car.setCarQuantity(2);
+
+        assertThrows(ZeroLengthCarColorException.class, () -> carService.create(car));
+    }
+
+    @Test
     void testCreateIfCarQuantityIsNegative() {
         Car car = new Car();
+        car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car.setCarName("Slamet Kopling");
+        car.setCarColor("Pink");
         car.setCarQuantity(-1);
 
         assertThrows(NegativeItemQuantityException.class, () -> carService.create(car));
     }
 
     @Test
-    void testCreateIfProductIdIsNull() {
+    void testCreateIfCarIdIsNull() {
         Car car = new Car();
-        car.setCarId(null);
         car.setCarName("Slamet Kopling");
+        car.setCarColor("Pink");
         car.setCarQuantity(2);
 
         assertDoesNotThrow(() -> carService.create(car));
@@ -98,6 +127,7 @@ class CarServiceImplTest {
         Car car = new Car();
         car.setCarId("");
         car.setCarName("Slamet Kopling");
+        car.setCarColor("Pink");
         car.setCarQuantity(2);
 
         assertThrows(ZeroLengthItemIdException.class, () -> carService.create(car));
@@ -118,6 +148,7 @@ class CarServiceImplTest {
         Car car1 = new Car();
         car1.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car1.setCarName("Slamet Kopling");
+        car1.setCarColor("Pink");
         car1.setCarQuantity(2);
 
         Mockito.when(carRepository.findById(Mockito.any())).thenReturn(car1);
@@ -125,6 +156,7 @@ class CarServiceImplTest {
         Car car2 = new Car();
         car2.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car2.setCarName("Slamet Kopling");
+        car2.setCarColor("Pink");
         car2.setCarQuantity(2);
 
         Car returnedValue = null;
@@ -135,6 +167,7 @@ class CarServiceImplTest {
         assertNotNull(returnedValue);
         assertEquals(car1.getCarId(), returnedValue.getCarId());
         assertEquals(car1.getCarName(), returnedValue.getCarName());
+        assertEquals(car2.getCarColor(), returnedValue.getCarColor());
         assertEquals(car1.getCarQuantity(), returnedValue.getCarQuantity());
     }
 
@@ -148,11 +181,12 @@ class CarServiceImplTest {
         String expectedMessage = "No such car in repository";
 
         Mockito.when(carRepository.findById(Mockito.any()))
-            .thenThrow(new ItemNotFoundException(expectedMessage));
+                .thenThrow(new ItemNotFoundException(expectedMessage));
 
         Car car = new Car();
         car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car.setCarName("Slamet Kopling");
+        car.setCarColor("Pink");
         car.setCarQuantity(2);
 
         String carId = car.getCarId();
@@ -167,6 +201,7 @@ class CarServiceImplTest {
         Car car1 = new Car();
         car1.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car1.setCarName("Slamet Kopling");
+        car1.setCarColor("Pink");
         car1.setCarQuantity(2);
 
         Mockito.when(carRepository.deleteById(Mockito.any())).thenReturn(car1);
@@ -174,6 +209,7 @@ class CarServiceImplTest {
         Car car2 = new Car();
         car2.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car2.setCarName("Slamet Kopling");
+        car2.setCarColor("Pink");
         car2.setCarQuantity(2);
 
         Car returnedValue = null;
@@ -197,11 +233,12 @@ class CarServiceImplTest {
         String expectedMessage = "No such car in repository";
 
         Mockito.when(carRepository.deleteById(Mockito.any()))
-            .thenThrow(new ItemNotFoundException(expectedMessage));
+                .thenThrow(new ItemNotFoundException(expectedMessage));
 
         Car car = new Car();
         car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car.setCarName("Slamet Kopling");
+        car.setCarColor("Pink");
         car.setCarQuantity(2);
 
         assertThrows(ItemNotFoundException.class, () ->
@@ -213,6 +250,7 @@ class CarServiceImplTest {
         Car car1 = new Car();
         car1.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car1.setCarName("Slamet Kopling");
+        car1.setCarColor("Pink");
         car1.setCarQuantity(2);
 
         Mockito.when(carRepository.update(Mockito.any())).thenReturn(car1);
@@ -220,6 +258,7 @@ class CarServiceImplTest {
         Car car2 = new Car();
         car2.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car2.setCarName("Slamet Kopling");
+        car2.setCarColor("Pink");
         car2.setCarQuantity(2);
 
         Car returnedValue = null;
@@ -230,6 +269,7 @@ class CarServiceImplTest {
         assertNotNull(returnedValue);
         assertEquals(car1.getCarId(), returnedValue.getCarId());
         assertEquals(car1.getCarName(), returnedValue.getCarName());
+        assertEquals(car1.getCarColor(), car2.getCarColor());
         assertEquals(car1.getCarQuantity(), returnedValue.getCarQuantity());
     }
 
@@ -242,6 +282,7 @@ class CarServiceImplTest {
     void testUpdateIfCarIdIsNull() {
         Car car = new Car();
         car.setCarName("Slamet Kopling");
+        car.setCarColor("Pink");
         car.setCarQuantity(2);
 
         assertThrows(NullItemIdException.class, () -> carService.update(car));
@@ -252,6 +293,7 @@ class CarServiceImplTest {
         Car car = new Car();
         car.setCarId("");
         car.setCarName("Slamet Kopling");
+        car.setCarColor("Pink");
         car.setCarQuantity(2);
 
         assertThrows(ZeroLengthItemIdException.class, () -> carService.update(car));
@@ -261,6 +303,7 @@ class CarServiceImplTest {
     void testUpdateIfCarNameIsNull() {
         Car car = new Car();
         car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
+        car.setCarColor("Pink");
         car.setCarQuantity(2);
 
         assertThrows(NullItemNameException.class, () -> carService.update(car));
@@ -271,9 +314,31 @@ class CarServiceImplTest {
         Car car = new Car();
         car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car.setCarName("");
+        car.setCarColor("Pink");
         car.setCarQuantity(2);
 
         assertThrows(ZeroLengthItemNameException.class, () -> carService.update(car));
+    }
+
+    @Test
+    void testUpdateIfCarColorIsNull() {
+        Car car = new Car();
+        car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
+        car.setCarName("Slamet Kopling");
+        car.setCarQuantity(2);
+
+        assertThrows(NullCarColorException.class, () -> carService.update(car));
+    }
+
+    @Test
+    void testUpdateIfCarColorHasZeroLength() {
+        Car car = new Car();
+        car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
+        car.setCarName("Slamet Kopling");
+        car.setCarColor("");
+        car.setCarQuantity(2);
+
+        assertThrows(ZeroLengthCarColorException.class, () -> carService.update(car));
     }
 
     @Test
@@ -281,6 +346,7 @@ class CarServiceImplTest {
         Car car = new Car();
         car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car.setCarName("Slamet Kopling");
+        car.setCarColor("Pink");
         car.setCarQuantity(-1);
 
         assertThrows(NegativeItemQuantityException.class, () -> carService.update(car));
@@ -291,11 +357,12 @@ class CarServiceImplTest {
         String expectedMessage = "An error occured in CarRepository";
 
         Mockito.when(carRepository.update(Mockito.any()))
-            .thenThrow(new ItemNotFoundException(expectedMessage));
+                .thenThrow(new ItemNotFoundException(expectedMessage));
 
         Car car = new Car();
         car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car.setCarName("Slamet Kopling");
+        car.setCarColor("Pink");
         car.setCarQuantity(2);
 
         assertThrows(ItemNotFoundException.class, () -> carService.update(car));

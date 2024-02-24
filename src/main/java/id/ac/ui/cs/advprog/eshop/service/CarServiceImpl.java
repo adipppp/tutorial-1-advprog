@@ -8,12 +8,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import id.ac.ui.cs.advprog.eshop.exceptions.ItemNotFoundException;
-import id.ac.ui.cs.advprog.eshop.exceptions.NegativeItemQuantityException;
-import id.ac.ui.cs.advprog.eshop.exceptions.NullItemIdException;
-import id.ac.ui.cs.advprog.eshop.exceptions.NullItemNameException;
-import id.ac.ui.cs.advprog.eshop.exceptions.ZeroLengthItemIdException;
-import id.ac.ui.cs.advprog.eshop.exceptions.ZeroLengthItemNameException;
+import id.ac.ui.cs.advprog.eshop.exceptions.*;
+import id.ac.ui.cs.advprog.eshop.exceptions.car.*;
 import id.ac.ui.cs.advprog.eshop.model.Car;
 import id.ac.ui.cs.advprog.eshop.repository.CarRepository;
 
@@ -35,12 +31,17 @@ public class CarServiceImpl implements CarService {
 
         String carId = car.getCarId();
         String carName = car.getCarName();
+        String carColor = car.getCarColor();
         int carQuantity = car.getCarQuantity();
 
         if (carName == null)
             throw new NullItemNameException();
         if (carName.isEmpty())
             throw new ZeroLengthItemNameException();
+        if (carColor == null)
+            throw new NullCarColorException();
+        if (carColor.isEmpty())
+            throw new ZeroLengthCarColorException();
         if (carQuantity < 0)
             throw new NegativeItemQuantityException();
 
@@ -86,16 +87,21 @@ public class CarServiceImpl implements CarService {
 
         String updatedCarId = updatedCar.getCarId();
         String updatedCarName = updatedCar.getCarName();
+        String updatedCarColor = updatedCar.getCarColor();
         int updatedCarQuantity = updatedCar.getCarQuantity();
 
         if (updatedCarId == null)
             throw new NullItemIdException();
         if (updatedCarName == null)
             throw new NullItemNameException();
+        if (updatedCarColor == null)
+            throw new NullCarColorException();
         if (updatedCarId.isEmpty())
             throw new ZeroLengthItemIdException();
         if (updatedCarName.isEmpty())
             throw new ZeroLengthItemNameException();
+        if (updatedCarColor.isEmpty())
+            throw new ZeroLengthCarColorException();
         if (updatedCarQuantity < 0)
             throw new NegativeItemQuantityException();
 

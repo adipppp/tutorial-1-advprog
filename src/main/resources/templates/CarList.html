@@ -22,16 +22,17 @@
         <tbody>
         <tr th:each="car: ${cars}">
             <td th:text="${car.carName}"></td>
-            <td th:text="${car.carColor}"></td>
             <td th:text="${car.carQuantity}"></td>
+            <td th:text="${car.carColor}"></td>
             <td>
-                <a th:href="@{/car/editCar/{id}(id=${car.carId})}" class="btn btn-info btn-sm">Edit</a>
+                <a th:href="@{'/car/editCar/' + ${car.carId}}">
+                    <button class="btn btn-info btn-sm">Edit</button>
+                </a>
             </td>
             <td>
-                <form th:action="@{/car/deleteCar}" method="post" >
-                    <input type="hidden" th:name="carId" th:value="${car.carId}" />
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                </form>
+                <a th:href="@{'/car/deleteCar/' + ${car.carId}}">
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </a>
             </td>
         </tr>
 

@@ -1,6 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.exceptions.*;
+import id.ac.ui.cs.advprog.eshop.exceptions.car.*;
 import id.ac.ui.cs.advprog.eshop.model.Car;
 import id.ac.ui.cs.advprog.eshop.service.CarService;
 import org.junit.jupiter.api.AfterEach;
@@ -21,11 +22,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class CarControllerTest {
     private static final String CREATE_CAR = "CreateCar";
     private static final String CAR_LIST = "CarList";
-    private static final String REDIRECT_CAR_LIST = "redirect:/car/list";
+    private static final String REDIRECT_CAR_LIST = "redirect:/car/listCar";
     private static final String EDIT_CAR = "EditCar";
     private static final String DELETE_CAR = "DeleteCar";
-
-    private static final String RUNTIME_EXCEPTION_MSG = "An exception has occured";
 
     private AutoCloseable closeable;
 
@@ -88,6 +87,32 @@ class CarControllerTest {
 
         Mockito.when(carService.create(carMock))
                 .thenThrow(NegativeItemQuantityException.class);
+
+        String expectedViewName = CREATE_CAR;
+        String actualViewName = carController.createCarPost(modelMock, carMock, resultMock);
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testCreateCarPostIfColorIsEmpty() {
+        Model modelMock = Mockito.mock(Model.class);
+        Car carMock = Mockito.mock(Car.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(carService.create(carMock)).thenThrow(ZeroLengthCarColorException.class);
+
+        String expectedViewName = CREATE_CAR;
+        String actualViewName = carController.createCarPost(modelMock, carMock, resultMock);
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testCreateCarPostIfColorIsNull() {
+        Model modelMock = Mockito.mock(Model.class);
+        Car carMock = Mockito.mock(Car.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(carService.create(carMock)).thenThrow(NullCarColorException.class);
 
         String expectedViewName = CREATE_CAR;
         String actualViewName = carController.createCarPost(modelMock, carMock, resultMock);
@@ -243,6 +268,22 @@ class CarControllerTest {
     }
 
     @Test
+    void testEditCarPostIfColorIsEmpty() {
+        Model modelMock = Mockito.mock(Model.class);
+        String carId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Car carMock = Mockito.mock(Car.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(carService.update(carMock))
+                .thenThrow(ZeroLengthCarColorException.class);
+
+        String expectedViewName = EDIT_CAR;
+        String actualViewName = carController.editCarPost(modelMock, carId, carMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
     void testEditCarPostIfNameIsEmpty() {
         Model modelMock = Mockito.mock(Model.class);
         String carId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
@@ -251,6 +292,21 @@ class CarControllerTest {
 
         Mockito.when(carService.update(carMock))
                 .thenThrow(ZeroLengthItemNameException.class);
+
+        String expectedViewName = EDIT_CAR;
+        String actualViewName = carController.editCarPost(modelMock, carId, carMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testEditCarPostIfColorIsNull() {
+        Model modelMock = Mockito.mock(Model.class);
+        String carId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Car carMock = Mockito.mock(Car.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(carService.update(carMock)).thenThrow(NullCarColorException.class);
 
         String expectedViewName = EDIT_CAR;
         String actualViewName = carController.editCarPost(modelMock, carId, carMock, resultMock);
