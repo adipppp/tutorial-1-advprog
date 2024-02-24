@@ -209,7 +209,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testEdit() {
+    void testUpdate() {
         Product product1 = new Product();
         product1.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product1.setProductName("Sendal Mas Faiz");
@@ -234,12 +234,12 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testEditIfArgumentIsNull() {
+    void testUpdateIfArgumentIsNull() {
         assertThrows(IllegalArgumentException.class, () -> productService.update(null));
     }
 
     @Test
-    void testEditIfProductIdIsNull() {
+    void testUpdateIfProductIdIsNull() {
         Product product = new Product();
         product.setProductName("Sendal Mas Faiz");
         product.setProductQuantity(2);
@@ -248,7 +248,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testEditIfProductIdHasZeroLength() {
+    void testUpdateIfProductIdHasZeroLength() {
         Product product = new Product();
         product.setProductId("");
         product.setProductName("Sendal Mas Faiz");
@@ -258,7 +258,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testEditIfProductNameIsNull() {
+    void testUpdateIfProductNameIsNull() {
         Product product = new Product();
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product.setProductQuantity(2);
@@ -267,7 +267,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testEditIfProductNameHasZeroLength() {
+    void testUpdateIfProductNameHasZeroLength() {
         Product product = new Product();
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product.setProductName("");
@@ -277,7 +277,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testEditIfProductQuantityIsNegative() {
+    void testUpdateIfProductQuantityIsNegative() {
         Product product = new Product();
         product.setProductId("46e4ce01-d7f8-4c50-811f-871ab409a05a");
         product.setProductName("Sendal Mas Faiz");
@@ -287,7 +287,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testEditIfNoSuchProduct() {
+    void testUpdateIfNoSuchProduct() {
         String expectedMessage = "An error occured in ProductRepository";
 
         Mockito.when(productRepository.update(Mockito.any()))

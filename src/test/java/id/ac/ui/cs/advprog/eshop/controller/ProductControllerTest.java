@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
+import id.ac.ui.cs.advprog.eshop.exceptions.*;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.service.ProductService;
 import org.junit.jupiter.api.AfterEach;
@@ -67,7 +68,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void testCreateProductPostIfResultHasErrors() {
+    void testCreateProductPostIfQuantityNotInteger() {
         Model modelMock = Mockito.mock(Model.class);
         Product productMock = Mockito.mock(Product.class);
         BindingResult resultMock = Mockito.mock(BindingResult.class);
@@ -75,7 +76,57 @@ class ProductControllerTest {
         Mockito.when(resultMock.hasErrors()).thenReturn(true);
 
         String expectedViewName = CREATE_PRODUCT;
-        String actualViewName = productController.createProductPost(modelMock, productMock, resultMock);
+        String actualViewName =
+                productController.createProductPost(modelMock, productMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testCreateProductPostIfQuantityIsNegative() {
+        Model modelMock = Mockito.mock(Model.class);
+        Product productMock = Mockito.mock(Product.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(productService.create(productMock))
+                .thenThrow(NegativeItemQuantityException.class);
+
+        String expectedViewName = CREATE_PRODUCT;
+        String actualViewName =
+                productController.createProductPost(modelMock, productMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testCreateProductPostIfNameIsEmpty() {
+        Model modelMock = Mockito.mock(Model.class);
+        Product productMock = Mockito.mock(Product.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(productService.create(productMock))
+                .thenThrow(ZeroLengthItemNameException.class);
+
+        String expectedViewName = CREATE_PRODUCT;
+        String actualViewName =
+                productController.createProductPost(modelMock, productMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testCreateProductPostIfNameIsNull() {
+        Model modelMock = Mockito.mock(Model.class);
+        Product productMock = Mockito.mock(Product.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(productService.create(productMock))
+                .thenThrow(NullItemNameException.class);
+
+        String expectedViewName = CREATE_PRODUCT;
+        String actualViewName =
+                productController.createProductPost(modelMock, productMock, resultMock);
+
         assertEquals(expectedViewName, actualViewName);
     }
 
@@ -86,10 +137,12 @@ class ProductControllerTest {
         BindingResult resultMock = Mockito.mock(BindingResult.class);
 
         Mockito.when(productService.create(productMock))
-            .thenThrow(new RuntimeException(RUNTIME_EXCEPTION_MSG));
+                .thenThrow(RuntimeException.class);
 
         String expectedViewName = CREATE_PRODUCT;
-        String actualViewName = productController.createProductPost(modelMock, productMock, resultMock);
+        String actualViewName =
+                productController.createProductPost(modelMock, productMock, resultMock);
+
         assertEquals(expectedViewName, actualViewName);
     }
 
@@ -115,12 +168,12 @@ class ProductControllerTest {
     }
 
     @Test
-    void testEditProductPageIfFindOneHasErrors() {
+    void testEditProductPageIfFindByIdHasErrors() {
         Model modelMock = Mockito.mock(Model.class);
         String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
 
         Mockito.when(productService.findById(productId))
-            .thenThrow(new RuntimeException(RUNTIME_EXCEPTION_MSG));
+                .thenThrow(new RuntimeException(RUNTIME_EXCEPTION_MSG));
 
         String expectedViewName = REDIRECT_PRODUCT_LIST;
         String actualViewName = productController.editProductPage(modelMock, productId);
@@ -136,14 +189,14 @@ class ProductControllerTest {
         BindingResult resultMock = Mockito.mock(BindingResult.class);
 
         String expectedViewName = REDIRECT_PRODUCT_LIST;
-        String actualViewName = productController.editProductPost(
-            modelMock, productId, productMock, resultMock);
+        String actualViewName =
+                productController.editProductPost(modelMock, productId, productMock, resultMock);
 
         assertEquals(expectedViewName, actualViewName);
     }
 
     @Test
-    void testEditProductPostIfResultHasErrors() {
+    void testEditProductPostIfQuantityNotInteger() {
         Model modelMock = Mockito.mock(Model.class);
         String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
         Product productMock = Mockito.mock(Product.class);
@@ -152,25 +205,127 @@ class ProductControllerTest {
         Mockito.when(resultMock.hasErrors()).thenReturn(true);
 
         String expectedViewName = EDIT_PRODUCT;
-        String actualViewName = productController.editProductPost(
-            modelMock, productId, productMock, resultMock);
+        String actualViewName =
+                productController.editProductPost(modelMock, productId, productMock, resultMock);
 
         assertEquals(expectedViewName, actualViewName);
     }
 
     @Test
-    void testEditProductPostIfEditHasErrors() {
+    void testEditProductPostIfProductNotFound() {
         Model modelMock = Mockito.mock(Model.class);
         String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
         Product productMock = Mockito.mock(Product.class);
         BindingResult resultMock = Mockito.mock(BindingResult.class);
 
         Mockito.when(productService.update(productMock))
-            .thenThrow(new RuntimeException(RUNTIME_EXCEPTION_MSG));
+                .thenThrow(ItemNotFoundException.class);
 
         String expectedViewName = EDIT_PRODUCT;
-        String actualViewName = productController.editProductPost(
-            modelMock, productId, productMock, resultMock);
+        String actualViewName =
+                productController.editProductPost(modelMock, productId, productMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+    
+    @Test
+    void testEditProductPostIfIdIsEmpty() {
+        Model modelMock = Mockito.mock(Model.class);
+        String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Product productMock = Mockito.mock(Product.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(productService.update(productMock))
+                .thenThrow(ZeroLengthItemIdException.class);
+
+        String expectedViewName = EDIT_PRODUCT;
+        String actualViewName =
+                productController.editProductPost(modelMock, productId, productMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testEditProductPostIfQuantityIsNegative() {
+        Model modelMock = Mockito.mock(Model.class);
+        String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Product productMock = Mockito.mock(Product.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(productService.update(productMock))
+                .thenThrow(NegativeItemQuantityException.class);
+
+        String expectedViewName = EDIT_PRODUCT;
+        String actualViewName =
+                productController.editProductPost(modelMock, productId, productMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testEditProductPostIfNameIsEmpty() {
+        Model modelMock = Mockito.mock(Model.class);
+        String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Product productMock = Mockito.mock(Product.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(productService.update(productMock))
+                .thenThrow(ZeroLengthItemNameException.class);
+
+        String expectedViewName = EDIT_PRODUCT;
+        String actualViewName =
+                productController.editProductPost(modelMock, productId, productMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testEditProductPostIfNameIsNull() {
+        Model modelMock = Mockito.mock(Model.class);
+        String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Product productMock = Mockito.mock(Product.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(productService.update(productMock))
+                .thenThrow(NullItemNameException.class);
+
+        String expectedViewName = EDIT_PRODUCT;
+        String actualViewName =
+                productController.editProductPost(modelMock, productId, productMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testEditProductPostIfIdIsNull() {
+        Model modelMock = Mockito.mock(Model.class);
+        String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Product productMock = Mockito.mock(Product.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(productService.update(productMock))
+                .thenThrow(NullItemIdException.class);
+
+        String expectedViewName = REDIRECT_PRODUCT_LIST;
+        String actualViewName =
+                productController.editProductPost(modelMock, productId, productMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testEditProductPostIfUpdateHasErrors() {
+        Model modelMock = Mockito.mock(Model.class);
+        String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Product productMock = Mockito.mock(Product.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(productService.update(productMock))
+                .thenThrow(RuntimeException.class);
+
+        String expectedViewName = EDIT_PRODUCT;
+        String actualViewName =
+                productController.editProductPost(modelMock, productId, productMock, resultMock);
 
         assertEquals(expectedViewName, actualViewName);
     }
@@ -187,7 +342,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void testDeleteProductPageIfFindOneHasErrors() {
+    void testDeleteProductPageIfFindByIdHasErrors() {
         Model modelMock = Mockito.mock(Model.class);
         String productId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
 

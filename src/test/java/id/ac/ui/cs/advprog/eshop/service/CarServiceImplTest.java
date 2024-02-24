@@ -209,7 +209,7 @@ class CarServiceImplTest {
     }
 
     @Test
-    void testEdit() {
+    void testUpdate() {
         Car car1 = new Car();
         car1.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car1.setCarName("Slamet Kopling");
@@ -234,12 +234,12 @@ class CarServiceImplTest {
     }
 
     @Test
-    void testEditIfArgumentIsNull() {
+    void testUpdateIfArgumentIsNull() {
         assertThrows(IllegalArgumentException.class, () -> carService.update(null));
     }
 
     @Test
-    void testEditIfCarIdIsNull() {
+    void testUpdateIfCarIdIsNull() {
         Car car = new Car();
         car.setCarName("Slamet Kopling");
         car.setCarQuantity(2);
@@ -248,7 +248,7 @@ class CarServiceImplTest {
     }
 
     @Test
-    void testEditIfCarIdHasZeroLength() {
+    void testUpdateIfCarIdHasZeroLength() {
         Car car = new Car();
         car.setCarId("");
         car.setCarName("Slamet Kopling");
@@ -258,7 +258,7 @@ class CarServiceImplTest {
     }
 
     @Test
-    void testEditIfCarNameIsNull() {
+    void testUpdateIfCarNameIsNull() {
         Car car = new Car();
         car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car.setCarQuantity(2);
@@ -267,7 +267,7 @@ class CarServiceImplTest {
     }
 
     @Test
-    void testEditIfCarNameHasZeroLength() {
+    void testUpdateIfCarNameHasZeroLength() {
         Car car = new Car();
         car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car.setCarName("");
@@ -277,7 +277,7 @@ class CarServiceImplTest {
     }
 
     @Test
-    void testEditIfCarQuantityIsNegative() {
+    void testUpdateIfCarQuantityIsNegative() {
         Car car = new Car();
         car.setCarId("9f163aee-aeba-475d-9a92-e5a78843a118");
         car.setCarName("Slamet Kopling");
@@ -287,7 +287,7 @@ class CarServiceImplTest {
     }
 
     @Test
-    void testEditIfNoSuchCar() {
+    void testUpdateIfNoSuchCar() {
         String expectedMessage = "An error occured in CarRepository";
 
         Mockito.when(carRepository.update(Mockito.any()))

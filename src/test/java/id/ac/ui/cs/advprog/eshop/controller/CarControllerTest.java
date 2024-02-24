@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
+import id.ac.ui.cs.advprog.eshop.exceptions.*;
 import id.ac.ui.cs.advprog.eshop.model.Car;
 import id.ac.ui.cs.advprog.eshop.service.CarService;
 import org.junit.jupiter.api.AfterEach;
@@ -67,7 +68,7 @@ class CarControllerTest {
     }
 
     @Test
-    void testCreateCarPostIfResultHasErrors() {
+    void testCreateCarPostIfQuantityNotInteger() {
         Model modelMock = Mockito.mock(Model.class);
         Car carMock = Mockito.mock(Car.class);
         BindingResult resultMock = Mockito.mock(BindingResult.class);
@@ -80,13 +81,53 @@ class CarControllerTest {
     }
 
     @Test
-    void testCreateCarPostIfCreateHasErrors() {
+    void testCreateCarPostIfQuantityIsNegative() {
         Model modelMock = Mockito.mock(Model.class);
         Car carMock = Mockito.mock(Car.class);
         BindingResult resultMock = Mockito.mock(BindingResult.class);
 
         Mockito.when(carService.create(carMock))
-            .thenThrow(new RuntimeException(RUNTIME_EXCEPTION_MSG));
+                .thenThrow(NegativeItemQuantityException.class);
+
+        String expectedViewName = CREATE_CAR;
+        String actualViewName = carController.createCarPost(modelMock, carMock, resultMock);
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testCreateCarPostIfNameIsEmpty() {
+        Model modelMock = Mockito.mock(Model.class);
+        Car carMock = Mockito.mock(Car.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(carService.create(carMock))
+                .thenThrow(ZeroLengthItemNameException.class);
+
+        String expectedViewName = CREATE_CAR;
+        String actualViewName = carController.createCarPost(modelMock, carMock, resultMock);
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testCreateCarPostIfNameIsNull() {
+        Model modelMock = Mockito.mock(Model.class);
+        Car carMock = Mockito.mock(Car.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(carService.create(carMock)).thenThrow(NullItemNameException.class);
+
+        String expectedViewName = CREATE_CAR;
+        String actualViewName = carController.createCarPost(modelMock, carMock, resultMock);
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testCreateCarPostIfCreateHasErrors() {
+        Model modelMock = Mockito.mock(Model.class);
+        Car carMock = Mockito.mock(Car.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(carService.create(carMock)).thenThrow(RuntimeException.class);
 
         String expectedViewName = CREATE_CAR;
         String actualViewName = carController.createCarPost(modelMock, carMock, resultMock);
@@ -115,12 +156,11 @@ class CarControllerTest {
     }
 
     @Test
-    void testEditCarPageIfFindOneHasErrors() {
+    void testEditCarPageIfFindByIdHasErrors() {
         Model modelMock = Mockito.mock(Model.class);
         String carId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
 
-        Mockito.when(carService.findById(carId))
-            .thenThrow(new RuntimeException(RUNTIME_EXCEPTION_MSG));
+        Mockito.when(carService.findById(carId)).thenThrow(RuntimeException.class);
 
         String expectedViewName = REDIRECT_CAR_LIST;
         String actualViewName = carController.editCarPage(modelMock, carId);
@@ -136,14 +176,13 @@ class CarControllerTest {
         BindingResult resultMock = Mockito.mock(BindingResult.class);
 
         String expectedViewName = REDIRECT_CAR_LIST;
-        String actualViewName = carController.editCarPost(
-            modelMock, carId, carMock, resultMock);
+        String actualViewName = carController.editCarPost(modelMock, carId, carMock, resultMock);
 
         assertEquals(expectedViewName, actualViewName);
     }
 
     @Test
-    void testEditCarPostIfResultHasErrors() {
+    void testEditCarPostIfQuantityNotInteger() {
         Model modelMock = Mockito.mock(Model.class);
         String carId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
         Car carMock = Mockito.mock(Car.class);
@@ -152,25 +191,114 @@ class CarControllerTest {
         Mockito.when(resultMock.hasErrors()).thenReturn(true);
 
         String expectedViewName = EDIT_CAR;
-        String actualViewName = carController.editCarPost(
-            modelMock, carId, carMock, resultMock);
+        String actualViewName = carController.editCarPost(modelMock, carId, carMock, resultMock);
 
         assertEquals(expectedViewName, actualViewName);
     }
 
     @Test
-    void testEditCarPostIfEditHasErrors() {
+    void testEditCarPostIfCarNotFound() {
+        Model modelMock = Mockito.mock(Model.class);
+        String carId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Car carMock = Mockito.mock(Car.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(carService.update(carMock)).thenThrow(ItemNotFoundException.class);
+
+        String expectedViewName = EDIT_CAR;
+        String actualViewName = carController.editCarPost(modelMock, carId, carMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testEditCarPostIfIdIsEmpty() {
+        Model modelMock = Mockito.mock(Model.class);
+        String carId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Car carMock = Mockito.mock(Car.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(carService.update(carMock)).thenThrow(ZeroLengthItemIdException.class);
+
+        String expectedViewName = EDIT_CAR;
+        String actualViewName = carController.editCarPost(modelMock, carId, carMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+    
+    @Test
+    void testEditCarPostIfQuantityIsNegative() {
         Model modelMock = Mockito.mock(Model.class);
         String carId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
         Car carMock = Mockito.mock(Car.class);
         BindingResult resultMock = Mockito.mock(BindingResult.class);
 
         Mockito.when(carService.update(carMock))
-            .thenThrow(new RuntimeException(RUNTIME_EXCEPTION_MSG));
+                .thenThrow(NegativeItemQuantityException.class);
 
         String expectedViewName = EDIT_CAR;
-        String actualViewName = carController.editCarPost(
-            modelMock, carId, carMock, resultMock);
+        String actualViewName = carController.editCarPost(modelMock, carId, carMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testEditCarPostIfNameIsEmpty() {
+        Model modelMock = Mockito.mock(Model.class);
+        String carId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Car carMock = Mockito.mock(Car.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(carService.update(carMock))
+                .thenThrow(ZeroLengthItemNameException.class);
+
+        String expectedViewName = EDIT_CAR;
+        String actualViewName = carController.editCarPost(modelMock, carId, carMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testEditCarPostIfNameIsNull() {
+        Model modelMock = Mockito.mock(Model.class);
+        String carId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Car carMock = Mockito.mock(Car.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(carService.update(carMock)).thenThrow(NullItemNameException.class);
+
+        String expectedViewName = EDIT_CAR;
+        String actualViewName = carController.editCarPost(modelMock, carId, carMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testEditCarPostIfIdIsNull() {
+        Model modelMock = Mockito.mock(Model.class);
+        String carId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Car carMock = Mockito.mock(Car.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(carService.update(carMock)).thenThrow(NullItemIdException.class);
+
+        String expectedViewName = REDIRECT_CAR_LIST;
+        String actualViewName = carController.editCarPost(modelMock, carId, carMock, resultMock);
+
+        assertEquals(expectedViewName, actualViewName);
+    }
+
+    @Test
+    void testEditCarPostIfUpdateHasErrors() {
+        Model modelMock = Mockito.mock(Model.class);
+        String carId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
+        Car carMock = Mockito.mock(Car.class);
+        BindingResult resultMock = Mockito.mock(BindingResult.class);
+
+        Mockito.when(carService.update(carMock)).thenThrow(RuntimeException.class);
+
+        String expectedViewName = EDIT_CAR;
+        String actualViewName = carController.editCarPost(modelMock, carId, carMock, resultMock);
 
         assertEquals(expectedViewName, actualViewName);
     }
@@ -187,12 +315,11 @@ class CarControllerTest {
     }
 
     @Test
-    void testDeleteCarPageIfFindOneHasErrors() {
+    void testDeleteCarPageIfFindByIdHasErrors() {
         Model modelMock = Mockito.mock(Model.class);
         String carId = "46e4ce01-d7f8-4c50-811f-871ab409a05a";
 
-        Mockito.when(carService.findById(carId))
-            .thenThrow(new RuntimeException(RUNTIME_EXCEPTION_MSG));
+        Mockito.when(carService.findById(carId)).thenThrow(RuntimeException.class);
 
         String expectedViewName = REDIRECT_CAR_LIST;
         String actualViewName = carController.deleteCarPage(modelMock, carId);
@@ -221,8 +348,7 @@ class CarControllerTest {
         Car carMock = Mockito.mock(Car.class);
         BindingResult resultMock = Mockito.mock(BindingResult.class);
 
-        Mockito.when(carService.deleteById(carId))
-            .thenThrow(new RuntimeException(RUNTIME_EXCEPTION_MSG));
+        Mockito.when(carService.deleteById(carId)).thenThrow(RuntimeException.class);
 
         String expectedViewName = REDIRECT_CAR_LIST;
         String actualViewName = carController.deleteCarPost(
