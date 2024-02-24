@@ -2,18 +2,25 @@
 Nama: Fernanda Nadhiftya Putra<br>
 NPM: 2206081686
 
+## Exercise 3
+### Reflection
+1. Single Responsibility Principle pada project ini saya terapkan pada setiap method pada setiap class implementasi `Repository`, `Service`, dan `Controller`. Contohnya, method `findById()` pada class `CarRepository` hanya memiliki sebuah <i>responsibility</i>, yaitu mencari sebuah `Car` dalam repository.<br><br>
+Open-Closed Principle pada project ini contohnya saya terapkan pada `ItemRepository`. `ItemRepository` dapat diimplement oleh dua class sekaligus, yaitu `CarRepository` dan `ProductRepository` tanpa harus memodifikasi interface tersebut.<br><br>
+Liskov Substitution Principle saya terapkan pada `CarService` dan `CarServiceImpl`, dimana keduanya bisa dipakai dalam `CarController` dengan fitur yang sama.<br><br>
+Interface Segregation Principle saya terapkan pada interface `ProductService` dan `CarService`, dimana `ProductService` digunakan secara khusus untuk `Product` serta `CarService` digunakan secara khusus untuk `Car`.<br><br>
+Dependency Inversion Principle contohnya saya terapkan pada penggunaan `CarService` daripada `CarServiceImpl` sebagai service untuk `CarController`.<br><br>
+
+2. Dengan menggunakan SOLID principle, codebase akan lebih mudah untuk di-maintain karena setiap class dan methodnya memiliki kegunaan dan fungsi yang jelas. Contohnya class `CarRepository` yang berfungsi untuk menghandle penyimpanan data `Car` serta method-methodnya seperti `deleteById()` yang melakukan sebuah <i>responsibility</i> yaitu menghapus data dari tempat penyimpanan.<br><br>
+
+3. Tanpa SOLID principle, sebuah method `deleteById()` pada class `CarRepository` yang sudah disebutkan bisa saja memiliki fungsionalitas lebih dari satu. Selain itu, bisa saja `ProductServiceImpl` dan `CarServiceImpl` menggunakan sebuah interface besar yang sama. Hal ini tentu membuat tujuan dari setiap class maupun interface tidak terlalu jelas.
+
 ## Exercise 2
 ### Reflection
-1. Pertama, ada masalah penggunaan `@Autowired` pada ProductController. `@Autowired` seharusnya diletakkan di atas constructor ProductController, bukan di atas field `service`. Saya memperbaikinya dengan menambahkan constructor baru, meletakkan `@Autowired` di atas constructor, kemudian mengassign field `service` pada constructor tersebut.<br>
-<br>
-Selain itu, ada juga issue yang melarang penulisan string yang sama berulang kali tanpa menggunakan constants. Oleh karena itu, saya mendeclare sebuah constant `PRODUCT_ATTR_NAME` pada ProductController untuk merepresentasikan string "product"
+1. Pertama, ada masalah penggunaan `@Autowired` pada ProductController. `@Autowired` seharusnya diletakkan di atas constructor ProductController, bukan di atas field `service`. Saya memperbaikinya dengan menambahkan constructor baru, meletakkan `@Autowired` di atas constructor, kemudian mengassign field `service` pada constructor tersebut. Selain itu, ada juga issue yang melarang penulisan string yang sama berulang kali tanpa menggunakan constants. Oleh karena itu, saya mendeclare sebuah constant `PRODUCT_ATTR_NAME` pada ProductController untuk merepresentasikan string "product"
 
 2. Menurut saya, workflow pada repository ini sudah masuk definisi Continuous Integration dan Continuous Deployment. Pada repository ini, Continuous Integration terletak pada workflow `ci.yml` dan `build.yml`. Kemudian, Continuous Deployment terletak pada deployment ke Koyeb. Saat ada pull request atau push, script yml tersebut akan menjalankan github actions, kemudian Koyeb akan mendeteksi adanya perubahan pada repository dan akan melakukan deployment secara otomatis.
 
 URL koyeb: https://advshop-adipppp.koyeb.app/
-
-### Reflection 2
-
 
 ## Exercise 1
 ### Reflection 1
