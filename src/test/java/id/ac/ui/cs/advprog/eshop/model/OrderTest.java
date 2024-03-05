@@ -8,6 +8,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
+
 class OrderTest {
     private List<Product> products;
 
@@ -31,7 +33,7 @@ class OrderTest {
         this.products.clear();
 
         assertThrows(IllegalArgumentException.class, () -> {
-            Order order = new Order("ac1c32b3-d0f8-40ba-97d9-2f77ef19507d",
+            new Order("ac1c32b3-d0f8-40ba-97d9-2f77ef19507d",
                 this.products, 1708560000L, "Safira Sudrajat");
         });
     }
@@ -49,20 +51,20 @@ class OrderTest {
         assertEquals("ac1c32b3-d0f8-40ba-97d9-2f77ef19507d", order.getId());
         assertEquals(1708560000L, order.getOrderTime());
         assertEquals("Safira Sudrajat", order.getAuthor());
-        assertEquals("WAITING_PAYMENT", order.getStatus());
+        assertEquals(OrderStatus.WAITING_PAYMENT.getValue(), order.getStatus());
     }
 
     @Test
     void testCreateOrderSuccessStatus() {
         Order order = new Order("ac1c32b3-d0f8-40ba-97d9-2f77ef19507d",
-            this.products, 1708560000L, "Safira Sudrajat", "SUCCESS");
-        assertEquals("SUCCESS", order.getStatus());
+            this.products, 1708560000L, "Safira Sudrajat", OrderStatus.SUCCESS.getValue());
+        assertEquals(OrderStatus.SUCCESS.getValue(), order.getStatus());
     }
 
     @Test
     void testCreateOrderInvalidStatus() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Order order = new Order("ac1c32b3-d0f8-40ba-97d9-2f77ef19507d",
+            new Order("ac1c32b3-d0f8-40ba-97d9-2f77ef19507d",
                 this.products, 1708560000L, "Safira Sudrajat", "MEOW");
         });
     }
@@ -71,8 +73,8 @@ class OrderTest {
     void testSetStatusToCancelled() {
         Order order = new Order("ac1c32b3-d0f8-40ba-97d9-2f77ef19507d",
             this.products, 1708560000L, "Safira Sudrajat");
-        order.setStatus("CANCELLED");
-        assertEquals("CANCELLED", order.getStatus());
+        order.setStatus(OrderStatus.CANCELLED.getValue());
+        assertEquals(OrderStatus.CANCELLED.getValue(), order.getStatus());
     }
 
     @Test
