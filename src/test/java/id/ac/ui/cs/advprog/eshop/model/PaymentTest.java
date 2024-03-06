@@ -7,18 +7,21 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
+
 class PaymentTest {
 
     @Test
     void testCreateAcceptedStatus() {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP_1234567890");
-        Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", "VOUCHER_CODE",
-            "ACCEPTED", paymentData);
+        Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
+            PaymentStatus.ACCEPTED.getValue(), paymentData);
 
         assertEquals("5051617f-b2bf-4384-b124-311641234dd9", payment.getId());
-        assertEquals("VOUCHER_CODE", payment.getMethod());
-        assertEquals("ACCEPTED", payment.getStatus());
+        assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), payment.getMethod());
+        assertEquals(PaymentStatus.ACCEPTED.getValue(), payment.getStatus());
         assertNotNull(payment.getPaymentData());
     }
 
@@ -26,12 +29,12 @@ class PaymentTest {
     void testCreateRejectedStatus() {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP_1234567890");
-        Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", "VOUCHER_CODE",
-            "REJECTED", paymentData);
+        Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
+            PaymentStatus.REJECTED.getValue(), paymentData);
 
         assertEquals("5051617f-b2bf-4384-b124-311641234dd9", payment.getId());
-        assertEquals("VOUCHER_CODE", payment.getMethod());
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), payment.getMethod());
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
         assertNotNull(payment.getPaymentData());
     }
 
@@ -41,7 +44,7 @@ class PaymentTest {
         paymentData.put("voucherCode", "ESHOP_1234567890");
 
         assertThrows(IllegalArgumentException.class, () ->
-            new Payment("5051617f-b2bf-4384-b124-311641234dd9", "VOUCHER_CODE",
+            new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
                 "Diterima", paymentData));
     }
 
@@ -49,12 +52,12 @@ class PaymentTest {
     void testCreateVoucherCodeMethod() {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP_1234567890");
-        Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", "VOUCHER_CODE",
-            "ACCEPTED", paymentData);
+        Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
+            PaymentStatus.ACCEPTED.getValue(), paymentData);
 
         assertEquals("5051617f-b2bf-4384-b124-311641234dd9", payment.getId());
-        assertEquals("VOUCHER_CODE", payment.getMethod());
-        assertEquals("ACCEPTED", payment.getStatus());
+        assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), payment.getMethod());
+        assertEquals(PaymentStatus.ACCEPTED.getValue(), payment.getStatus());
         assertNotNull(payment.getPaymentData());
     }
 
@@ -63,12 +66,12 @@ class PaymentTest {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("bankName", "Bank Udah Bank");
         paymentData.put("referenceCode", "24434");
-        Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", "BANK_TRANSFER",
-            "ACCEPTED", paymentData);
+        Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.BANK_TRANSFER.getValue(),
+            PaymentStatus.ACCEPTED.getValue(), paymentData);
 
         assertEquals("5051617f-b2bf-4384-b124-311641234dd9", payment.getId());
-        assertEquals("BANK_TRANSFER", payment.getMethod());
-        assertEquals("ACCEPTED", payment.getStatus());
+        assertEquals(PaymentMethod.BANK_TRANSFER.getValue(), payment.getMethod());
+        assertEquals(PaymentStatus.ACCEPTED.getValue(), payment.getStatus());
         assertNotNull(payment.getPaymentData());
     }
 
@@ -79,6 +82,6 @@ class PaymentTest {
 
         assertThrows(IllegalArgumentException.class, () ->
             new Payment("5051617f-b2bf-4384-b124-311641234dd9", "Kode_voucher",
-                "ACCEPTED", paymentData));
+                PaymentStatus.ACCEPTED.getValue(), paymentData));
     }
 }
