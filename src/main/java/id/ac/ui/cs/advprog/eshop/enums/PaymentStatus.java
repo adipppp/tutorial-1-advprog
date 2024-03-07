@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum PaymentStatus {
-    ACCEPTED("ACCEPTED"),
+    SUCCESS("SUCCESS"),
     REJECTED("REJECTED");
 
     private final String value;

@@ -28,7 +28,7 @@ class PaymentRepositoryTest {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP_1234567890");
         Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
-            PaymentStatus.ACCEPTED.getValue(), paymentData);
+            PaymentStatus.SUCCESS.getValue(), paymentData);
 
         Payment returnedPayment = paymentRepository.save(payment);
 
@@ -40,14 +40,16 @@ class PaymentRepositoryTest {
         Map<String, String> paymentData1 = new HashMap<>();
         paymentData1.put("voucherCode", "ESHOP_1234567890");
         Payment payment1 = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
-            PaymentStatus.ACCEPTED.getValue(), paymentData1);
+            PaymentStatus.SUCCESS.getValue(), paymentData1);
 
-        paymentRepository.save(payment1);
+        Payment returnedPayment1 = paymentRepository.save(payment1);
+
+        assertEquals(payment1, returnedPayment1);
 
         Map<String, String> paymentData2 = new HashMap<>();
         paymentData2.put("voucherCode", "ESHOP_0987654321");
         Payment payment2 = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
-            PaymentStatus.ACCEPTED.getValue(), paymentData2);
+            PaymentStatus.SUCCESS.getValue(), paymentData2);
 
         Payment returnedPayment2 = paymentRepository.save(payment2);
 
@@ -59,7 +61,7 @@ class PaymentRepositoryTest {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP_1234567890");
         Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
-            PaymentStatus.ACCEPTED.getValue(), paymentData);
+            PaymentStatus.SUCCESS.getValue(), paymentData);
         paymentRepository.save(payment);
 
         Payment returnedPayment = paymentRepository.findById("5051617f-b2bf-4384-b124-311641234dd9");
@@ -78,13 +80,13 @@ class PaymentRepositoryTest {
         Map<String, String> paymentData1 = new HashMap<>();
         paymentData1.put("voucherCode", "ESHOP_1234567890");
         Payment payment1 = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
-            PaymentStatus.ACCEPTED.getValue(), paymentData1);
+            PaymentStatus.SUCCESS.getValue(), paymentData1);
         paymentRepository.save(payment1);
 
         Map<String, String> paymentData2 = new HashMap<>();
         paymentData2.put("voucherCode", "ESHOP_0987654321");
         Payment payment2 = new Payment("7ec990bf-989e-4299-ace8-68885aa14793", PaymentMethod.VOUCHER_CODE.getValue(),
-            PaymentStatus.ACCEPTED.getValue(), paymentData2);
+            PaymentStatus.SUCCESS.getValue(), paymentData2);
         paymentRepository.save(payment2);
 
         List<Payment> paymentData = paymentRepository.findAll();
