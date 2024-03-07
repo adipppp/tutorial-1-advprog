@@ -13,32 +13,6 @@ import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 class PaymentTest {
 
     @Test
-    void testCreateAcceptedStatus() {
-        Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "ESHOP_1234567890");
-        Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
-            PaymentStatus.ACCEPTED.getValue(), paymentData);
-
-        assertEquals("5051617f-b2bf-4384-b124-311641234dd9", payment.getId());
-        assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), payment.getMethod());
-        assertEquals(PaymentStatus.ACCEPTED.getValue(), payment.getStatus());
-        assertNotNull(payment.getPaymentData());
-    }
-
-    @Test
-    void testCreateRejectedStatus() {
-        Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "ESHOP_1234567890");
-        Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
-            PaymentStatus.REJECTED.getValue(), paymentData);
-
-        assertEquals("5051617f-b2bf-4384-b124-311641234dd9", payment.getId());
-        assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), payment.getMethod());
-        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
-        assertNotNull(payment.getPaymentData());
-    }
-
-    @Test
     void testCreateInvalidStatus() {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP_1234567890");
@@ -49,7 +23,7 @@ class PaymentTest {
     }
 
     @Test
-    void testCreateVoucherCodeMethod() {
+    void testCreateVoucherCodeAcceptedStatus() {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP_1234567890");
         Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
@@ -60,9 +34,22 @@ class PaymentTest {
         assertEquals(PaymentStatus.ACCEPTED.getValue(), payment.getStatus());
         assertNotNull(payment.getPaymentData());
     }
+    
+    @Test
+    void testCreateVoucherCodeRejectedStatus() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "1234567890");
+        Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
+            PaymentStatus.REJECTED.getValue(), paymentData);
+
+        assertEquals("5051617f-b2bf-4384-b124-311641234dd9", payment.getId());
+        assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), payment.getMethod());
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+        assertNotNull(payment.getPaymentData());
+    }
 
     @Test
-    void testCreateBankTransferMethod() {
+    void testCreateBankTransferAcceptedStatus() {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("bankName", "Bank Udah Bank");
         paymentData.put("referenceCode", "24434");
@@ -72,6 +59,20 @@ class PaymentTest {
         assertEquals("5051617f-b2bf-4384-b124-311641234dd9", payment.getId());
         assertEquals(PaymentMethod.BANK_TRANSFER.getValue(), payment.getMethod());
         assertEquals(PaymentStatus.ACCEPTED.getValue(), payment.getStatus());
+        assertNotNull(payment.getPaymentData());
+    }
+
+    @Test
+    void testCreateBankTransferRejectedStatus() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("bankName", "Bank Udah Bank");
+        paymentData.put("referenceCode", "");
+        Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.BANK_TRANSFER.getValue(),
+            PaymentStatus.REJECTED.getValue(), paymentData);
+
+        assertEquals("5051617f-b2bf-4384-b124-311641234dd9", payment.getId());
+        assertEquals(PaymentMethod.BANK_TRANSFER.getValue(), payment.getMethod());
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
         assertNotNull(payment.getPaymentData());
     }
 
