@@ -4,23 +4,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class InvalidVoucherCodeExceptionTest {
+class InvalidPaymentDataExceptionTest {
 
     @Test
     void testVoidConstructor() {
-        InvalidVoucherCodeException invalidVoucherCodeException =
-            new InvalidVoucherCodeException();
+        InvalidPaymentDataException invalidVoucherCodeException =
+            new InvalidPaymentDataException();
 
-        assertThrows(InvalidVoucherCodeException.class,
+        assertThrows(InvalidPaymentDataException.class,
             () -> { throw invalidVoucherCodeException; });
     }
 
     @Test
     void testStringConstructor() {
-        InvalidVoucherCodeException invalidVoucherCodeException =
-            new InvalidVoucherCodeException("An invalid voucher code exception has occured");
+        InvalidPaymentDataException invalidVoucherCodeException =
+            new InvalidPaymentDataException("An invalid payment data exception has occured");
 
-        Exception exception = assertThrows(InvalidVoucherCodeException.class,
+        Exception exception = assertThrows(InvalidPaymentDataException.class,
             () -> { throw invalidVoucherCodeException; });
 
         assertEquals(invalidVoucherCodeException.getMessage(), exception.getMessage());
@@ -29,10 +29,10 @@ class InvalidVoucherCodeExceptionTest {
     @Test
     void testThrowableConstructor() {
         Throwable throwable = new Throwable();
-        InvalidVoucherCodeException invalidVoucherCodeException =
-            new InvalidVoucherCodeException(throwable);
+        InvalidPaymentDataException invalidVoucherCodeException =
+            new InvalidPaymentDataException(throwable);
 
-        Exception exception = assertThrows(InvalidVoucherCodeException.class,
+        Exception exception = assertThrows(InvalidPaymentDataException.class,
             () -> { throw invalidVoucherCodeException; });
 
         assertEquals(throwable, exception.getCause());
@@ -41,11 +41,11 @@ class InvalidVoucherCodeExceptionTest {
     @Test
     void testStringAndThrowableConstructor() {
         Throwable throwable = new Throwable();
-        InvalidVoucherCodeException invalidVoucherCodeException =
-            new InvalidVoucherCodeException(
-                "An invalid voucher code exception has occured because of a throwable", throwable);
+        InvalidPaymentDataException invalidVoucherCodeException =
+            new InvalidPaymentDataException(
+                "An invalid payment data exception has occured because of a throwable", throwable);
 
-        Exception exception = assertThrows(InvalidVoucherCodeException.class,
+        Exception exception = assertThrows(InvalidPaymentDataException.class,
             () -> { throw invalidVoucherCodeException; });
 
         assertEquals(invalidVoucherCodeException.getMessage(), exception.getMessage());

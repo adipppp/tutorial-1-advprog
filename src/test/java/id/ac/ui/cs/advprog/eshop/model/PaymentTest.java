@@ -23,7 +23,7 @@ class PaymentTest {
     }
 
     @Test
-    void testCreateVoucherCodeAcceptedStatus() {
+    void testCreateVoucherCodeSuccessStatus() {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP_1234567890");
         Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
@@ -49,7 +49,7 @@ class PaymentTest {
     }
 
     @Test
-    void testCreateBankTransferAcceptedStatus() {
+    void testCreateBankTransferSuccessStatus() {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("bankName", "Bank Udah Bank");
         paymentData.put("referenceCode", "24434");
