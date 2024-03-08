@@ -26,7 +26,7 @@ class PaymentRepositoryTest {
     @Test
     void testSave() {
         Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "ESHOP_1234567890");
+        paymentData.put("voucherCode", "ESHOP_12345678_A");
         Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
             PaymentStatus.SUCCESS.getValue(), paymentData);
 
@@ -38,7 +38,7 @@ class PaymentRepositoryTest {
     @Test
     void testSaveIfIdAlreadyExists() {
         Map<String, String> paymentData1 = new HashMap<>();
-        paymentData1.put("voucherCode", "ESHOP_1234567890");
+        paymentData1.put("voucherCode", "ESHOP_12345678_A");
         Payment payment1 = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
             PaymentStatus.SUCCESS.getValue(), paymentData1);
 
@@ -47,7 +47,7 @@ class PaymentRepositoryTest {
         assertEquals(payment1, returnedPayment1);
 
         Map<String, String> paymentData2 = new HashMap<>();
-        paymentData2.put("voucherCode", "ESHOP_0987654321");
+        paymentData2.put("voucherCode", "ESHOP_87654321_C");
         Payment payment2 = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
             PaymentStatus.SUCCESS.getValue(), paymentData2);
 
@@ -59,7 +59,7 @@ class PaymentRepositoryTest {
     @Test
     void testFindById() {
         Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "ESHOP_1234567890");
+        paymentData.put("voucherCode", "ESHOP_12345678_A");
         Payment payment = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
             PaymentStatus.SUCCESS.getValue(), paymentData);
         paymentRepository.save(payment);
@@ -78,13 +78,13 @@ class PaymentRepositoryTest {
     @Test
     void testFindAll() {
         Map<String, String> paymentData1 = new HashMap<>();
-        paymentData1.put("voucherCode", "ESHOP_1234567890");
+        paymentData1.put("voucherCode", "ESHOP_12345678_A");
         Payment payment1 = new Payment("5051617f-b2bf-4384-b124-311641234dd9", PaymentMethod.VOUCHER_CODE.getValue(),
             PaymentStatus.SUCCESS.getValue(), paymentData1);
         paymentRepository.save(payment1);
 
         Map<String, String> paymentData2 = new HashMap<>();
-        paymentData2.put("voucherCode", "ESHOP_0987654321");
+        paymentData2.put("voucherCode", "ESHOP_87654321_C");
         Payment payment2 = new Payment("7ec990bf-989e-4299-ace8-68885aa14793", PaymentMethod.VOUCHER_CODE.getValue(),
             PaymentStatus.SUCCESS.getValue(), paymentData2);
         paymentRepository.save(payment2);
