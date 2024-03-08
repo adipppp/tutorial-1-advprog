@@ -2,7 +2,13 @@
 Nama: Fernanda Nadhiftya Putra<br>
 NPM: 2206081686
 
-## Exercise 3
+## Module 4
+### Reflection
+1. Dalam konteks Exercise 4 ini, proses TDD cukup rumit dan memakan banyak waktu, terutama saat pertama kali menulis test untuk sebuah class. Akan tetapi, saya merasa bahwa dengan adanya TDD, sebuah program dapat lebih mudah di-maintain bahkan ketika ada fitur-fitur baru yang ditambahkan pada program tersebut.
+
+2. Test yang sudah saya tulis sudah berjalan secepat mungkin sehingga tidak akan menghambat workflow. Selain itu, test tersebut menghasilkan hasil yang konsisten, self-validating, tidak tergantung pada test case lain, serta mengcover happy dan unhappy path. Oleh sebab itu, saya menyimpulkan bahwa tests yang saya tulis sudah mengikuti F.I.R.S.T Principle.
+
+## Module 3
 ### Reflection
 1. Single Responsibility Principle pada project ini saya terapkan pada setiap method pada setiap class implementasi `Repository`, `Service`, dan `Controller`. Contohnya, method `findById()` pada class `CarRepository` hanya memiliki sebuah <i>responsibility</i>, yaitu mencari sebuah `Car` dalam repository.<br><br>
 Open-Closed Principle pada project ini contohnya saya terapkan pada `ItemRepository`. `ItemRepository` dapat diimplement oleh dua class sekaligus, yaitu `CarRepository` dan `ProductRepository` tanpa harus memodifikasi interface tersebut.<br><br>
@@ -14,7 +20,7 @@ Dependency Inversion Principle contohnya saya terapkan pada penggunaan `CarServi
 
 3. Tanpa SOLID principle, sebuah method `deleteById()` pada class `CarRepository` yang sudah disebutkan bisa saja memiliki fungsionalitas lebih dari satu. Selain itu, bisa saja `ProductServiceImpl` dan `CarServiceImpl` menggunakan sebuah interface besar yang sama. Hal ini tentu membuat tujuan dari setiap class maupun interface tidak terlalu jelas.
 
-## Exercise 2
+## Module 2
 ### Reflection
 1. Pertama, ada masalah penggunaan `@Autowired` pada ProductController. `@Autowired` seharusnya diletakkan di atas constructor ProductController, bukan di atas field `service`. Saya memperbaikinya dengan menambahkan constructor baru, meletakkan `@Autowired` di atas constructor, kemudian mengassign field `service` pada constructor tersebut. Selain itu, ada juga issue yang melarang penulisan string yang sama berulang kali tanpa menggunakan constants. Oleh karena itu, saya mendeclare sebuah constant `PRODUCT_ATTR_NAME` pada ProductController untuk merepresentasikan string "product"
 
@@ -22,7 +28,7 @@ Dependency Inversion Principle contohnya saya terapkan pada penggunaan `CarServi
 
 URL koyeb: https://advshop-adipppp.koyeb.app/
 
-## Exercise 1
+## Module 1
 ### Reflection 1
 Setelah mempelajari prinsip Clean Code, saya sebisa mungkin tidak menggunakan comments dalam menulis kode. Agar kode tetap mudah dipahami, saya memberikan nama yang deskriptif pada setiap variabel dan method yang saya tulis. Selain itu, saya menerapkan error handling pada kode saya. Saat sebuah method mengalami hal yang tidak diinginkan, saya segera melakukan throw `RuntimeException` dengan message yang menjelaskan mengapa error tersebut terjadi. Exception tersebut kemudian akan di-handle oleh method lain yang memanggil method tersebut.
 
